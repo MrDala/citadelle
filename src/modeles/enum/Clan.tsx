@@ -1,0 +1,10 @@
+enum Clan {
+  NEUTRE = "NEUTRE",
+  NOBLE = "NOBLE",
+  COMMERCANT = "COMMERCANT",
+  RELIGIEUX = "RELIGIEUX",
+  MILITAIRE = "MILITAIRE",
+  MERVEILLE = "MERVEILLE"
+}
+
+export default Clan;

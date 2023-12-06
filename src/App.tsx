@@ -1,24 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Partie from './modeles/Partie';
+import JoueurDefaut from './modeles/joueurs/JoueurDefaut';
+import iJoueur from './modeles/joueurs/iJoueur';
 
 function App() {
+  let joueurs = new Array<iJoueur>();
+  joueurs.push(new JoueurDefaut("Alex"));
+  joueurs.push(new JoueurDefaut("Nico"));
+  joueurs.push(new JoueurDefaut("Manon"));
+  joueurs.push(new JoueurDefaut("Joshua"));
+  joueurs.push(new JoueurDefaut("JB"));
+  joueurs.push(new JoueurDefaut("Aurélie"));
+  
+  var partie = new Partie(joueurs);
+
+  partie.debutPartie();
+  partie.tourDeJeu();
+
+  partie.statusPartie();
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
     </div>
   );
 }
