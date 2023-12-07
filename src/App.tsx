@@ -12,12 +12,12 @@ function App() {
   joueurs.push(new JoueurDefaut("JB"));
   joueurs.push(new JoueurDefaut("Aurélie"));
   joueurs.push(new JoueurDefaut("Clément"));
-  
-  var partie = new Partie(joueurs);
 
+  var partie = new Partie(joueurs);
+  console.log(partie.pioche);
   partie.debutPartie();
   partie.tourDeJeu();
-
+  
   // partie.statusPartie();
   return (
     <div className="App">

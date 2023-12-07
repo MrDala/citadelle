@@ -2,6 +2,7 @@ import json from "../data/data.json";
 import Clan from "../enum/Clan";
 import CustomArray from "../tools/CustomArray";
 import Batiment, { typeBatiment } from "./Batiment";
+import { Effets } from "./Effets";
 
 class FabriqueBatiments {
   static init() : CustomArray<Batiment> {
@@ -13,7 +14,7 @@ class FabriqueBatiments {
         cout: batiment.cout, 
         valeur: batiment.valeur, 
         clan: Clan[batiment.clan as keyof typeof Clan], 
-        effet: batiment.effet ?? undefined
+        effet: Effets[batiment.effet!] ?? undefined
       }
 
       for(let i = 0; i < batiment.quantite; i++) {

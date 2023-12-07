@@ -22,7 +22,7 @@ class CustomArray<T> extends Array<T> {
   }
   
 
-  melangerListe(): void {
+  melanger(): void {
     this.sort(() => Math.random() - 0.5);
   }
 }

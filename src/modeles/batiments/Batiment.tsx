@@ -1,11 +1,12 @@
 import Clan from "../enum/Clan";
+import { effet } from "./Effets";
 
 export type typeBatiment = {
   nom: string, 
   cout: number, 
   valeur: number, 
   clan: Clan, 
-  effet?: string
+  effet?: effet
 }
 
 class Batiment {
@@ -13,7 +14,7 @@ class Batiment {
   cout: number;
   valeur: number;
   clan: Clan;
-  effet?: string;
+  effet?: effet;
 
   constructor(batiment : typeBatiment) {
     this.nom = batiment.nom;

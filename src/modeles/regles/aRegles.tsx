@@ -23,15 +23,6 @@ abstract class aRegles implements iRegles{
   distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
     // Retrait des cartes VISIBLES
     for (let i = 0; i < this.nbrCartesVisibles; i++) {
-      if (personnages.length > 0) {
-        cartesVisibles.push(personnages.shift()!);
-      } else {
-        throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
-      }
-    }
-
-    // Retrait des carte MASQUEES
-    for (let i = 0; i < this.nbrCartesMasqueesAvantDistribution; i++) {
       let carte: iPersonnage | null = null;
     
       while (!carte || carte instanceof Roi) {
@@ -45,6 +36,15 @@ abstract class aRegles implements iRegles{
         } catch (error) {
           throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
         }
+      }
+    }
+
+    // Retrait des carte MASQUEES
+    for (let i = 0; i < this.nbrCartesMasqueesAvantDistribution; i++) {
+      if (personnages.length > 0) {
+        cartesVisibles.push(personnages.shift()!);
+      } else {
+        throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
       }
     }
     

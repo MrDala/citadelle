@@ -9,6 +9,9 @@ import iRegles from "./regles/iRegles";
 import CustomArray from "./tools/CustomArray";
 
 class Partie {
+  NOMBRE_JOUEUR_MIN = 2;
+  NOMBRE_JOUEUR_MAX = 7;
+
   regles: iRegles;
   joueurs: CustomArray<iJoueur>;
   pioche: CustomArray<Batiment>;
@@ -17,16 +20,16 @@ class Partie {
   cartesMasquees: CustomArray<iPersonnage>;
 
   constructor(joueurs: CustomArray<iJoueur>) {
-    if (joueurs.length < 2) {
+    if (joueurs.length < this.NOMBRE_JOUEUR_MIN) {
       throw Error(Erreurs.ERREUR_MANQUE_JOUEURS);
-    } else if (joueurs.length > 7) {
+    } else if (joueurs.length > this.NOMBRE_JOUEUR_MAX) {
       throw Error(Erreurs.ERREUR_TROP_JOUEURS);
     }
 
     this.joueurs = joueurs;
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
     this.pioche = FabriqueBatiments.init();
-    this.pioche.melangerListe();
+    this.pioche.melanger();
     this.personnages = FabriquePersonnages.initAll();
     this.cartesVisibles = new CustomArray<iPersonnage>();
     this.cartesMasquees = new CustomArray<iPersonnage>();
@@ -50,16 +53,6 @@ class Partie {
     this.phaseFinDeTour();
   }
 
-
-  private getIndexCouronne(): number {
-    // Détermine l'index du premier joueur à jouer
-    const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.couronne === true);
-    if (indexAvecCouronne === -1) {
-      throw new Error(Erreurs.ERREUR_COURRONNE);
-    }
-    return indexAvecCouronne;
-  }
-
   statusPartie() {
     console.log("Liste des joueurs");
     console.log(this.joueurs);
@@ -69,8 +62,9 @@ class Partie {
     console.log(this.cartesMasquees);
   }
 
+  /* Phase d'un tour de jeu */
   private phaseChoixDuRole() {
-    this.personnages.melangerListe();
+    this.personnages.melanger();
     const indexPremierJoueur = this.getIndexCouronne();
     this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
   }
@@ -80,6 +74,16 @@ class Partie {
     this.joueurs.forEach(joueur => {
       this.personnages.concat(joueur.rendrePersonnage());
     });
+  }
+
+  /* Fonction utilitaires */
+  private getIndexCouronne(): number {
+    // Détermine l'index du premier joueur à jouer
+    const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.couronne === true);
+    if (indexAvecCouronne === -1) {
+      throw new Error(Erreurs.ERREUR_COURRONNE);
+    }
+    return indexAvecCouronne;
   }
 }
 
