@@ -1,5 +1,6 @@
 import Batiment from "./batiments/Batiment";
 import FabriqueBatiments from "./batiments/FabriqueBatiments";
+import Erreurs from "./enum/Erreurs";
 import iJoueur from "./joueurs/iJoueur";
 import FabriquePersonnages from "./personnages/FabriquePersonnage";
 import iPersonnage from "./personnages/iPersonnage";
@@ -17,9 +18,9 @@ class Partie {
 
   constructor(joueurs: CustomArray<iJoueur>) {
     if (joueurs.length < 2) {
-      throw Error("[ERREUR] : Pas assez de joueurs");
+      throw Error(Erreurs.ERREUR_MANQUE_JOUEURS);
     } else if (joueurs.length > 7) {
-      throw Error("[ERREUR] : Trop de joueurs");
+      throw Error(Erreurs.ERREUR_TROP_JOUEURS);
     }
 
     this.joueurs = joueurs;
@@ -45,16 +46,16 @@ class Partie {
   }
 
   tourDeJeu() {
-    this.personnages.melangerListe();
-    const indexPremierJoueur = this.getIndexCouronne();
-    this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
+    this.phaseChoixDuRole();
+    this.phaseFinDeTour();
   }
+
 
   private getIndexCouronne(): number {
     // Détermine l'index du premier joueur à jouer
     const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.couronne === true);
     if (indexAvecCouronne === -1) {
-      throw new Error("[ERROR]: Aucun joueur avec couronne trouvé.");
+      throw new Error(Erreurs.ERREUR_COURRONNE);
     }
     return indexAvecCouronne;
   }
@@ -68,12 +69,17 @@ class Partie {
     console.log(this.cartesMasquees);
   }
 
-  finTour() {
+  private phaseChoixDuRole() {
+    this.personnages.melangerListe();
+    const indexPremierJoueur = this.getIndexCouronne();
+    this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
+  }
+
+
+  private phaseFinDeTour() {
     this.joueurs.forEach(joueur => {
       this.personnages.concat(joueur.rendrePersonnage());
     });
-
-    this.personnages.melangerListe();
   }
 }
 

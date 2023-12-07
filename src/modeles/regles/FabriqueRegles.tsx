@@ -1,3 +1,4 @@
+import Erreurs from "../enum/Erreurs";
 import ReglesCinqJoueurs from "./ReglesCinqJoueurs";
 import ReglesDeuxJoueurs from "./ReglesDeuxJoueurs";
 import ReglesQuatreJoueurs from "./ReglesQuatreJoueurs";
@@ -23,7 +24,7 @@ class FabriqueRegles {
       case 7:
         return new ReglesSeptJoueurs();
       default:
-        throw new Error("[ERROR] : Nombre de joueurs non supporté.")
+        throw new Error(Erreurs.ERREUR_NOMBRE_JOUEURS)
     }
   }
 }

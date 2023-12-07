@@ -1,3 +1,4 @@
+import Erreurs from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import Roi from "../personnages/Roi";
 import iPersonnage from "../personnages/iPersonnage";
@@ -25,7 +26,7 @@ abstract class aRegles implements iRegles{
       if (personnages.length > 0) {
         cartesVisibles.push(personnages.shift()!);
       } else {
-        throw new Error("[ERROR] Carte personnage manquante");
+        throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
       }
     }
 
@@ -42,7 +43,7 @@ abstract class aRegles implements iRegles{
             cartesMasquees.push(carte);
           }
         } catch (error) {
-          throw new Error("[ERROR] Carte personnage manquante");
+          throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
         }
       }
     }
@@ -57,13 +58,13 @@ abstract class aRegles implements iRegles{
       if (personnages.length > 0) {
         cartesMasquees.push(personnages.shift()!);
       } else {
-        throw new Error("[ERROR] Carte personnage manquante");
+        throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
       }
     }
 
     // Contrôle de la bonne distribution
     if (personnages.length !== 0) {
-      throw new Error("[ERROR]: Erreur de distribution des cartes");
+      throw new Error(Erreurs.ERREUR_DISTRIBUTION);
     }
   }
 }

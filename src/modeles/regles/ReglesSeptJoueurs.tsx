@@ -1,3 +1,4 @@
+import Erreurs from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
 import CustomArray from "../tools/CustomArray";
@@ -11,7 +12,7 @@ class ReglesSeptJoueurs extends aRegles {
   distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
     // Retrait d'une carte MASQUEE
     if (personnages.length === 0) {
-      throw new Error("[ERROR] Carte personnage manquante");
+      throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
     }
     cartesMasquees.push(personnages.shift()!);
 
@@ -30,13 +31,13 @@ class ReglesSeptJoueurs extends aRegles {
 
     // Retrait des carte MASQUEES
     if (personnages.length === 0) {
-      throw new Error("[ERROR] Carte personnage manquante");
+      throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
     }
     cartesMasquees.push(personnages.shift()!);
 
     // Contrôle de la bonne distribution
     if (personnages.length !== 0) {
-      throw new Error("[ERROR]: Erreur de distribution des cartes");
+      throw new Error(Erreurs.ERREUR_DISTRIBUTION);
     }
   }
 }

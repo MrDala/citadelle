@@ -1,3 +1,4 @@
+import Erreurs from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
 import CustomArray from "../tools/CustomArray";
@@ -13,7 +14,7 @@ class ReglesTroisJoueurs extends aRegles {
     try {
       cartesMasquees.push(personnages.shift()!);
     } catch (error) {
-      throw new Error("[ERROR]: Impossible de retirer une carte de la pile");
+      throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
     }
 
     joueurs.customForEach(indexPremierJoueur, joueur => {
@@ -24,12 +25,12 @@ class ReglesTroisJoueurs extends aRegles {
     try {
       cartesMasquees.push(personnages.shift()!);
     } catch (error) {
-      throw new Error("[ERROR]: Impossible de retirer une carte de la pile");
+      throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
     }
 
     // Contrôle de la bonne distribution
     if (personnages.length !== 0) {
-      throw new Error("[ERROR]: Erreur de distribution des cartes");
+      throw new Error(Erreurs.ERREUR_DISTRIBUTION);
     }
   }
 }
