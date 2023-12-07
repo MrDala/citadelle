@@ -5,17 +5,17 @@ import FabriquePersonnages from "./personnages/FabriquePersonnage";
 import iPersonnage from "./personnages/iPersonnage";
 import FabriqueRegles from "./regles/FabriqueRegles";
 import iRegles from "./regles/iRegles";
-import { melangerListe } from "./tools/function";
+import CustomArray from "./tools/CustomArray";
 
 class Partie {
   regles: iRegles;
-  joueurs: Array<iJoueur>;
-  pioche: Array<Batiment>;
-  personnages: Array<iPersonnage>;
-  cartesVisibles: Array<iPersonnage>;
-  cartesMasquees: Array<iPersonnage>;
+  joueurs: CustomArray<iJoueur>;
+  pioche: CustomArray<Batiment>;
+  personnages: CustomArray<iPersonnage>;
+  cartesVisibles: CustomArray<iPersonnage>;
+  cartesMasquees: CustomArray<iPersonnage>;
 
-  constructor(joueurs: Array<iJoueur>) {
+  constructor(joueurs: CustomArray<iJoueur>) {
     if (joueurs.length < 2) {
       throw Error("[ERREUR] : Pas assez de joueurs");
     } else if (joueurs.length > 7) {
@@ -25,10 +25,10 @@ class Partie {
     this.joueurs = joueurs;
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
     this.pioche = FabriqueBatiments.init();
-    this.pioche = melangerListe(this.pioche);
+    this.pioche.melangerListe();
     this.personnages = FabriquePersonnages.initAll();
-    this.cartesVisibles = new Array<iPersonnage>();
-    this.cartesMasquees = new Array<iPersonnage>();
+    this.cartesVisibles = new CustomArray<iPersonnage>();
+    this.cartesMasquees = new CustomArray<iPersonnage>();
   }
 
   debutPartie() {
@@ -45,7 +45,7 @@ class Partie {
   }
 
   tourDeJeu() {
-    this.personnages = melangerListe(this.personnages);
+    this.personnages.melangerListe();
     const indexPremierJoueur = this.getIndexCouronne();
     this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
   }
@@ -73,7 +73,7 @@ class Partie {
       this.personnages.concat(joueur.rendrePersonnage());
     });
 
-    this.personnages = melangerListe(this.personnages);
+    this.personnages.melangerListe();
   }
 }
 

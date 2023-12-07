@@ -1,10 +1,11 @@
 import json from "../data/data.json";
 import Clan from "../enum/Clan";
+import CustomArray from "../tools/CustomArray";
 import Batiment, { typeBatiment } from "./Batiment";
 
 class FabriqueBatiments {
-  static init() : Array<Batiment> {
-    const batiments: Array<Batiment> = new Array<Batiment>();
+  static init() : CustomArray<Batiment> {
+    const batiments: CustomArray<Batiment> = new CustomArray<Batiment>();
 
     json.batiments.forEach((batiment) => {
       const bat: typeBatiment = {

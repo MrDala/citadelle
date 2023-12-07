@@ -1,18 +1,19 @@
 import Batiment from "../batiments/Batiment";
 import iPersonnage from "../personnages/iPersonnage";
+import CustomArray from "../tools/CustomArray";
 
 interface iJoueur {
   pseudo: string;
   couronne: boolean;
-  personnages: Array<iPersonnage>;
-  cartesEnMain: Array<Batiment>;
-  cartesPosees: Array<Batiment>;
+  personnages: CustomArray<iPersonnage>;
+  cartesEnMain: CustomArray<Batiment>;
+  cartesPosees: CustomArray<Batiment>;
   argent: number;
 
   piocheBatiment(batiment: Batiment | undefined): void;
   
-  choixPersonnage(personnages: Array<iPersonnage>, pileDestination: Array<iPersonnage>): void;
-  rendrePersonnage(): Array<iPersonnage>;
+  choixPersonnage(personnages: CustomArray<iPersonnage>, pileDestination: CustomArray<iPersonnage>): void;
+  rendrePersonnage(): CustomArray<iPersonnage>;
 
   setCouronne(bool: boolean): void;
   variationArgent(variation: number): void
