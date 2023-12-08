@@ -22,6 +22,10 @@ for (let i=0; i < 20; i++) {
   partie.tourDeJeu();
 }
 
+export function sum(a: number, b: number): number {
+  return a + b;
+}
+
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');
 // });
