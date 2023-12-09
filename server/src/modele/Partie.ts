@@ -1,3 +1,4 @@
+import json from "./data/data.json";
 import Batiment from "./batiments/Batiment";
 import FabriqueBatiments from "./batiments/FabriqueBatiments";
 import ChoixAction from "./enum/ChoixAction";
@@ -30,7 +31,7 @@ class Partie {
 
     this.joueurs = joueurs;
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
-    this.pioche = new CustomArray<Batiment>(...FabriqueBatiments.init());
+    this.pioche = new CustomArray<Batiment>(...FabriqueBatiments.init(json.batiments));
     this.pioche.melanger();
     this.personnages = FabriquePersonnages.initAll();
     this.cartesVisibles = new CustomArray<iPersonnage>();

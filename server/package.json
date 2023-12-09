@@ -19,6 +19,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "@babel/preset-env": "^7.23.5",
+    "babel-jest": "^29.7.0",
+    "express": "^4.17.1",
+    "ts-jest": "^29.1.1"
   }
 }
