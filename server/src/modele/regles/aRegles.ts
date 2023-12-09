@@ -5,24 +5,52 @@ import iPersonnage from "../personnages/iPersonnage";
 import CustomArray from "../tools/CustomArray";
 import iRegles from "./iRegles";
 
-abstract class aRegles implements iRegles{
-  initArgent: number;
-  initPioche: number;
-  nbrCartesMasqueesAvantDistribution: number;
-  nbrCartesMasqueesApresDistribution: number;
-  nbrCartesVisibles: number;
+abstract class aRegles implements iRegles {
+  init: {
+    argent: number;
+    batimentsMain: number;
+  };
+  cartesEcartees: {
+    masqueesAvantDistribution: number;
+    masqueesApresDistribution: number;
+    visibles: number;
+  };
+  debutTour: {
+    argent: number;
+    argentParBatiment: number,
+    nbBatimentsPioches: number;
+    nbBatimentGardes: number;
+  };
 
-  protected constructor(initArgent: number = 2, initPioche: number = 4, nbrCartesMasqueesAvantDistribution: number, nbrCartesMasqueesApresDistribution: number, nbrCartesVisibles: number) {
-    this.initArgent = initArgent;
-    this.initPioche = initPioche;
-    this.nbrCartesMasqueesAvantDistribution = nbrCartesMasqueesAvantDistribution;
-    this.nbrCartesMasqueesApresDistribution = nbrCartesMasqueesApresDistribution;
-    this.nbrCartesVisibles = nbrCartesVisibles;
+  protected constructor({
+    init = { 
+      argent: 2, 
+      batimentsMain: 4 
+    },
+    cartesEcartees: {
+      masqueesAvantDistribution= 0,
+      masqueesApresDistribution= 0,
+      visibles= 0
+    },
+    debutTour = { 
+      argent: 2,
+      argentParBatiment: 1,
+      nbBatimentsPioches: 2, 
+      nbBatimentGardes: 1
+    },
+  }) {
+    this.init = init;
+    this.cartesEcartees = {
+      masqueesAvantDistribution,
+      masqueesApresDistribution,
+      visibles
+    };
+    this.debutTour = debutTour;
   }
-  
+
   public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
     // Retrait des cartes VISIBLES
-    for (let i = 0; i < this.nbrCartesVisibles; i++) {
+    for (let i = 0; i < this.cartesEcartees.visibles; i++) {
       let carte: iPersonnage | null = null;
     
       while (!carte || carte instanceof Roi) {
@@ -40,7 +68,7 @@ abstract class aRegles implements iRegles{
     }
 
     // Retrait des carte MASQUEES
-    for (let i = 0; i < this.nbrCartesMasqueesAvantDistribution; i++) {
+    for (let i = 0; i < this.cartesEcartees.masqueesAvantDistribution; i++) {
       if (personnages.length > 0) {
         cartesVisibles.push(personnages.shift()!);
       } else {
@@ -54,7 +82,7 @@ abstract class aRegles implements iRegles{
     });
 
     // Retrait des carte MASQUEES
-    for (let i = 0; i < this.nbrCartesMasqueesApresDistribution; i++) {
+    for (let i = 0; i < this.cartesEcartees.masqueesApresDistribution; i++) {
       if (personnages.length > 0) {
         cartesMasquees.push(personnages.shift()!);
       } else {

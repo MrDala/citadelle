@@ -11,9 +11,6 @@ import iRegles from "./regles/iRegles";
 import CustomArray from "./tools/CustomArray";
 
 class Partie {
-  private NOMBRE_JOUEUR_MIN = 2;
-  private NOMBRE_JOUEUR_MAX = 7;
-
   private regles: iRegles;
   private joueurs: CustomArray<iJoueur>;
   private pioche: CustomArray<Batiment>;
@@ -23,9 +20,9 @@ class Partie {
   private nombreTour: number;
 
   constructor(joueurs: CustomArray<iJoueur>) {
-    if (joueurs.length < this.NOMBRE_JOUEUR_MIN) {
+    if (joueurs.length < FabriqueRegles.JOUEURS_MIN) {
       throw Error(ERREURS.ERREUR_MANQUE_JOUEURS());
-    } else if (joueurs.length > this.NOMBRE_JOUEUR_MAX) {
+    } else if (joueurs.length > FabriqueRegles.JOUEURS_MAX) {
       throw Error(ERREURS.ERREUR_TROP_JOUEURS());
     }
 
@@ -41,13 +38,13 @@ class Partie {
 
   public debutPartie() {
     this.joueurs.forEach(joueur => {
-      for (let i = 0; i < this.regles.initPioche; i++) {
+      for (let i = 0; i < this.regles.init.batimentsMain; i++) {
         let carte = this.pioche.shift();
         if (carte) {
           joueur.batimentsEnMain.push(carte);
         }
       }
-      joueur.argent += this.regles.initArgent;
+      joueur.argent += this.regles.init.argent;
     });
 
     var indexCouronne = Math.floor(Math.random() * this.joueurs.length);
@@ -58,6 +55,7 @@ class Partie {
     this.phaseChoixDuRole();
     this.phaseAction();
     this.phaseFinDeTour();
+    console.log(this.joueurs);
   }
 
   /* Phase d'un tour de jeu */
@@ -117,7 +115,7 @@ class Partie {
   private gainPassif(joueur: iJoueur, personnage: iPersonnage) : void {
     joueur.batimentsPoses.forEach(batiment => {
       if (batiment.clan === personnage.clan) {
-        joueur.argent += 1;
+        joueur.argent += this.regles.debutTour.argent;
       }
     })
   }
@@ -127,11 +125,11 @@ class Partie {
 
     switch (action) {
       case ChoixAction.ARGENT:
-        joueur.argent += 2;
+        joueur.argent += this.regles.debutTour.argent;
         break;
       case ChoixAction.PIOCHE:
         const cartes = new CustomArray<Batiment>;
-        for (let i=0; i< 2; i++) {
+        for (let i=0; i < this.regles.debutTour.nbBatimentsPioches; i++) {
           let carte;
           carte = this.pioche.shift();
           
@@ -141,7 +139,7 @@ class Partie {
         }
 
         if (cartes.length > 0) {
-          this.pioche.push(...joueur.choixCarteBatiment(cartes));
+          this.pioche.push(...joueur.choixCarteBatiment(cartes, this.regles.debutTour.nbBatimentGardes));
         }
     }
     return 0;

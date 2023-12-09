@@ -22,7 +22,7 @@ abstract class aJoueur implements iJoueur {
   }
 
   /* Fonction à implémenter dans les classes enfants */
-  abstract choixCarteBatiment(cartes: CustomArray<Batiment>): CustomArray<Batiment>;
+  abstract choixCarteBatiment(cartes: CustomArray<Batiment>, nbBatimentsGardes: number): CustomArray<Batiment>;
   abstract choixArgentPioche(): ChoixAction;
   abstract construireBatiment(): void;
 

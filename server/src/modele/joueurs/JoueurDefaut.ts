@@ -12,15 +12,17 @@ class JoueurDefaut extends aJoueur{
     return random === 0 ? ChoixAction.PIOCHE : ChoixAction.ARGENT;  
   };
 
-  choixCarteBatiment(cartes: CustomArray<Batiment>): CustomArray<Batiment> {
+  choixCarteBatiment(cartes: CustomArray<Batiment>, nbBatimentsGardes= 1): CustomArray<Batiment> {
     if (cartes.length === 0) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
   
-    const randomIndex = Math.floor(Math.random() * cartes.length);
+    for(let i=0; (i < nbBatimentsGardes) && (cartes.length !== 0); i++) {
+      const randomIndex = Math.floor(Math.random() * cartes.length);
   
-    const carteChoisie = cartes.splice(randomIndex, 1)[0];
-    this.batimentsEnMain.push(carteChoisie);
+      const carteChoisie = cartes.splice(randomIndex, 1)[0];
+      this.batimentsEnMain.push(carteChoisie);
+    }
   
     return cartes;
   }

@@ -9,6 +9,9 @@ import iRegles from "./iRegles";
 
 
 class FabriqueRegles {
+  public static readonly JOUEURS_MIN = 2;
+  public static readonly JOUEURS_MAX = 7;
+
   public static getRegles(nombreJoueurs: number): iRegles {
     switch (nombreJoueurs) {
       case 2:

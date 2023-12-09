@@ -2,7 +2,13 @@ import aRegles from "./aRegles";
 
 class ReglesCinqJoueurs extends aRegles {
   public constructor() {
-    super(undefined, undefined, 1, 1, 1)
+    super({ 
+      cartesEcartees: { 
+        masqueesAvantDistribution: 1, 
+        masqueesApresDistribution: 1, 
+        visibles: 1, 
+      }
+    })
   }
 }
 

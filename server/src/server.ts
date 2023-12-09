@@ -18,12 +18,8 @@ joueurs.push(new JoueurDefaut("Clément"));
 
 const partie = new Partie(joueurs);
 partie.debutPartie();
-for (let i=0; i < 20; i++) {
+for (let i=0; i < 1; i++) {
   partie.tourDeJeu();
-}
-
-export function sum(a: number, b: number): number {
-  return a + b;
 }
 
 // app.get('/', (req, res) => {

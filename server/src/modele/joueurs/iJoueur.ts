@@ -15,7 +15,7 @@ interface iJoueur {
   rendrePersonnage(): CustomArray<iPersonnage>;
 
   choixArgentPioche(): ChoixAction;
-  choixCarteBatiment(cartes: CustomArray<Batiment>): CustomArray<Batiment>
+  choixCarteBatiment(cartes: CustomArray<Batiment>, nbBatimentsGardes: number): CustomArray<Batiment>
   construireBatiment(): void;
 }
 
