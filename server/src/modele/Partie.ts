@@ -2,7 +2,7 @@ import json from "./data/data.json";
 import Batiment from "./batiments/Batiment";
 import FabriqueBatiments from "./batiments/FabriqueBatiments";
 import ChoixAction from "./enum/ChoixAction";
-import Erreurs from "./enum/Erreurs";
+import ERREURS from "./enum/Erreurs";
 import iJoueur from "./joueurs/iJoueur";
 import FabriquePersonnages from "./personnages/FabriquePersonnage";
 import iPersonnage from "./personnages/iPersonnage";
@@ -24,9 +24,9 @@ class Partie {
 
   constructor(joueurs: CustomArray<iJoueur>) {
     if (joueurs.length < this.NOMBRE_JOUEUR_MIN) {
-      throw Error(Erreurs.ERREUR_MANQUE_JOUEURS);
+      throw Error(ERREURS.ERREUR_MANQUE_JOUEURS());
     } else if (joueurs.length > this.NOMBRE_JOUEUR_MAX) {
-      throw Error(Erreurs.ERREUR_TROP_JOUEURS);
+      throw Error(ERREURS.ERREUR_TROP_JOUEURS());
     }
 
     this.joueurs = joueurs;
@@ -96,7 +96,7 @@ class Partie {
     // Détermine l'index du premier joueur à jouer
     const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.couronne === true);
     if (indexAvecCouronne === -1) {
-      throw new Error(Erreurs.ERREUR_COURRONNE);
+      throw new Error(ERREURS.ERREUR_COURRONNE());
     }
     return indexAvecCouronne;
   }

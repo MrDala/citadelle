@@ -1,6 +1,6 @@
 import Batiment from "../batiments/Batiment";
 import ChoixAction from "../enum/ChoixAction";
-import Erreurs from "../enum/Erreurs";
+import ERREURS from "../enum/Erreurs";
 import CustomArray from "../tools/CustomArray";
 import aJoueur from "./aJoueur";
 
@@ -14,7 +14,7 @@ class JoueurDefaut extends aJoueur{
 
   choixCarteBatiment(cartes: CustomArray<Batiment>): CustomArray<Batiment> {
     if (cartes.length === 0) {
-      throw new Error(Erreurs.ERREUR_CARTE_MANQUANTE);
+      throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
   
     const randomIndex = Math.floor(Math.random() * cartes.length);

@@ -1,5 +1,5 @@
 import Clan from "../enum/Clan";
-import Erreurs from "../enum/Erreurs";
+import ERREURS from "../enum/Erreurs";
 import { Effets, effet } from "./Effets";
 
 export type typeBatiment = {
@@ -30,15 +30,15 @@ class Batiment {
   private checkFields(batiment: typeBatiment): void {
 
     if (typeof batiment.nom !== 'string') {
-      throw new Error(Erreurs.ERREUR_BAT_ATTRIBUT + batiment.nom);
+      throw new Error(ERREURS.ERREUR_BAT_ATTRIBUT("batiment.nom", batiment.nom));
     }
 
     if (typeof batiment.cout !== 'number' || batiment.cout <= 0) {
-      throw new Error(Erreurs.ERREUR_BAT_ATTRIBUT + batiment.cout);
+      throw new Error(ERREURS.ERREUR_BAT_ATTRIBUT("batiment.cout", batiment.cout));
     }
 
     if (typeof batiment.valeur !== 'number' || batiment.valeur <= 0) {
-      throw new Error(Erreurs.ERREUR_BAT_ATTRIBUT + batiment.valeur);
+      throw new Error(ERREURS.ERREUR_BAT_ATTRIBUT("batiment.valeur", batiment.valeur));
     }
 
     if (
@@ -51,7 +51,7 @@ class Batiment {
         batiment.clan !== Clan.MERVEILLE
       )
     ) {
-      throw new Error(Erreurs.ERREUR_BAT_ATTRIBUT + batiment.clan);
+      throw new Error(ERREURS.ERREUR_BAT_ATTRIBUT("batiment.clan", batiment.clan));
     }
 
     if (
@@ -61,7 +61,7 @@ class Batiment {
         batiment.clan !== Clan.MERVEILLE
       )
     ) {
-      throw new Error(Erreurs.ERREUR_BAT_ATTRIBUT + batiment.effet);
+      throw new Error(ERREURS.ERREUR_BAT_ATTRIBUT("batiment.effet", batiment.effet));
     }
   }
 }

@@ -1,4 +1,4 @@
-import Erreurs from "../enum/Erreurs";
+import ERREURS from "../enum/Erreurs";
 import ReglesCinqJoueurs from "./ReglesCinqJoueurs";
 import ReglesDeuxJoueurs from "./ReglesDeuxJoueurs";
 import ReglesQuatreJoueurs from "./ReglesQuatreJoueurs";
@@ -24,7 +24,7 @@ class FabriqueRegles {
       case 7:
         return new ReglesSeptJoueurs();
       default:
-        throw new Error(Erreurs.ERREUR_NOMBRE_JOUEURS)
+        throw new Error(ERREURS.ERREUR_NOMBRE_JOUEURS())
     }
   }
 }

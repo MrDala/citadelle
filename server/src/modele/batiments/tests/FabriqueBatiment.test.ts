@@ -81,7 +81,6 @@ const jsonValide = [
   }
 ]
 
-
 describe('FabriqueBatiments', () => {
   test('should handle empty JSON', () => {
     const batiments = FabriqueBatiments.init(jsonVide as BatimentJson[]);
