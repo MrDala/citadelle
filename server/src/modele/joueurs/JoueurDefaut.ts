@@ -27,7 +27,7 @@ class JoueurDefaut extends aJoueur{
     return cartes;
   }
 
-  construireBatiment(): void {
+  construireBatiment(): Batiment | null {
     const batimentsConstructibles = new CustomArray<Batiment>;
 
     this.batimentsEnMain.forEach(batiment => {
@@ -36,14 +36,17 @@ class JoueurDefaut extends aJoueur{
       }
     })
 
+    let batimentChoisi = null;
     if (batimentsConstructibles.length > 0) {
       const randomIndex = Math.floor(Math.random() * batimentsConstructibles.length);
-      const batimentChoisi = batimentsConstructibles.splice(randomIndex, 1)[0];
+      batimentChoisi = batimentsConstructibles.splice(randomIndex, 1)[0];
   
       this.batimentsEnMain.transfer(this.batimentsPoses, batimentChoisi);
 
       this.argent -= batimentChoisi.cout;
     }
+
+    return batimentChoisi;
   }
   
 }

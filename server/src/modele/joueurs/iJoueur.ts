@@ -10,13 +10,13 @@ interface iJoueur {
   batimentsEnMain: CustomArray<Batiment>;
   batimentsPoses: CustomArray<Batiment>;
   argent: number;
-  
+    
   choixPersonnage(personnages: CustomArray<iPersonnage>, pileDestination: CustomArray<iPersonnage>): void;
   rendrePersonnage(): CustomArray<iPersonnage>;
 
   choixArgentPioche(): ChoixAction;
   choixCarteBatiment(cartes: CustomArray<Batiment>, nbBatimentsGardes: number): CustomArray<Batiment>
-  construireBatiment(): void;
+  construireBatiment(): Batiment | null;
 }
 
 export default iJoueur;

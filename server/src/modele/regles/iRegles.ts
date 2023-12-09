@@ -19,7 +19,16 @@ interface iRegles {
     nbBatimentGardes: number;
   };
 
-  distribution: (indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) => void;
+  distribution (
+    indexPremierJoueur: number, 
+    joueurs: CustomArray<iJoueur>, 
+    personnages: CustomArray<iPersonnage>, 
+    cartesVisibles: CustomArray<iPersonnage>, 
+    cartesMasquees: CustomArray<iPersonnage>
+  ) : void;
+  
+  isPartieTerminee (joueurs: CustomArray<iJoueur>) : boolean;
+  calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur) : number;
 }
 
 export default iRegles;

@@ -1,3 +1,4 @@
+import Clan from "../enum/Clan";
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import Roi from "../personnages/Roi";
@@ -94,6 +95,33 @@ abstract class aRegles implements iRegles {
     if (personnages.length !== 0) {
       throw new Error(ERREURS.ERREUR_DISTRIBUTION());
     }
+  }
+
+  public isPartieTerminee(joueurs: CustomArray<iJoueur>): boolean {
+    return joueurs.some(joueur => joueur.batimentsPoses.length >= 8);
+  }
+
+  calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur): number {
+      let score = 0;
+
+      joueur.batimentsPoses.forEach(batiment => {
+        score += batiment.valeur;
+      });
+
+      const clansPossedes = new Set(joueur.batimentsPoses.map(batiment => batiment.clan));
+      const clansRequis = [Clan.NOBLE, Clan.COMMERCANT, Clan.RELIGIEUX, Clan.MILITAIRE, Clan.MERVEILLE];
+    
+      if (clansRequis.every(clan => clansPossedes.has(clan))) {
+        score += 3;
+      }
+
+      if (joueur === premierHuitBatiments) {
+        score += 4;
+      } else if (joueur.batimentsPoses.length >= 8) {
+        score += 2;
+      }
+
+      return score;
   }
 }
 

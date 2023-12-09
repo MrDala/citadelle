@@ -18,6 +18,7 @@ class Partie {
   private cartesVisibles: CustomArray<iPersonnage>;
   private cartesMasquees: CustomArray<iPersonnage>;
   private nombreTour: number;
+  private premierHuitBatiments: iJoueur | null;
 
   constructor(joueurs: CustomArray<iJoueur>) {
     if (joueurs.length < FabriqueRegles.JOUEURS_MIN) {
@@ -34,9 +35,26 @@ class Partie {
     this.cartesVisibles = new CustomArray<iPersonnage>();
     this.cartesMasquees = new CustomArray<iPersonnage>();
     this.nombreTour = 1;
+    this.premierHuitBatiments = null;
   }
 
-  public debutPartie() {
+  public jouer(): void {
+    console.log("DEBUT DE LA PARTIE");
+
+    this.initPartie();
+  
+    do {
+      this.tourDeJeu();
+    } while (!this.regles.isPartieTerminee(this.joueurs));
+  
+    let classement = this.getClassement();
+
+    console.log("Nombre de tour joués : " + this.nombreTour + "\n");
+    console.log(classement);
+    console.log("\nFIN DE LA PARTIE");
+  }
+
+  private initPartie(): void {
     this.joueurs.forEach(joueur => {
       for (let i = 0; i < this.regles.init.batimentsMain; i++) {
         let carte = this.pioche.shift();
@@ -51,21 +69,34 @@ class Partie {
     this.joueurs[indexCouronne].couronne = true;
   }
 
-  public tourDeJeu() {
+  private tourDeJeu(): void {
     this.phaseChoixDuRole();
     this.phaseAction();
     this.phaseFinDeTour();
-    console.log(this.joueurs);
+  }
+
+  private getClassement(): Array<{ pseudo: string; score: number }> {
+    let classement: Array<{ pseudo: string; score: number }> = [];
+  
+    this.joueurs.forEach(joueur => {
+      let score = this.regles.calculScore(joueur, this.premierHuitBatiments!);
+      classement.push({ pseudo: joueur.pseudo, score });
+    });
+  
+    // Trier le classement selon les scores (en ordre décroissant)
+    classement.sort((a, b) => b.score - a.score);
+  
+    return classement;
   }
 
   /* Phase d'un tour de jeu */
-  private phaseChoixDuRole() {
+  private phaseChoixDuRole(): void {
     this.personnages.melanger();
     const indexPremierJoueur = this.getIndexCouronne();
     this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
   }
 
-  private phaseAction() {
+  private phaseAction(): void {
     const personnagesTries = this.getPersonnagesTries();
 
     // Appeler chaque joueur dans l'ordre de passage de leurs personnages
@@ -77,7 +108,7 @@ class Partie {
     });
   }
 
-  private phaseFinDeTour() {
+  private phaseFinDeTour(): void {
     this.joueurs.forEach(joueur => {
       const personnagesRendus = joueur.rendrePersonnage();
       this.personnages.push(...personnagesRendus);
@@ -151,6 +182,10 @@ class Partie {
 
   private actionConstruire(joueur: iJoueur) {
     joueur.construireBatiment();
+
+    if (joueur.batimentsPoses.length >= 8 && !this.premierHuitBatiments) {
+      this.premierHuitBatiments = joueur;
+    }
   }
 
 }
