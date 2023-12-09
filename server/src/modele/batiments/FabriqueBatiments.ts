@@ -40,7 +40,7 @@ class FabriqueBatiments {
     // Vérifiez que tous les champs obligatoires sont initialisés
     return (
       typeof batiment.nom === 'string' &&
-      typeof batiment.cout === 'number' && batiment.quantite > 0 &&
+      typeof batiment.cout === 'number' && batiment.cout > 0 &&
       typeof batiment.valeur === 'number' && batiment.quantite > 0 &&
       typeof batiment.clan === 'string' && (
         batiment.clan === Clan.NOBLE ||
