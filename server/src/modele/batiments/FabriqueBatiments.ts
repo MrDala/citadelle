@@ -2,6 +2,7 @@ import Clan from "../enum/Clan";
 import CustomArray from "../tools/CustomArray";
 import Batiment, { typeBatiment } from "./Batiment";
 import { Effets } from "./Effets";
+import iBatiment from "./iBatiments";
 
 export interface BatimentJson {
   nom: string;
@@ -13,8 +14,9 @@ export interface BatimentJson {
 }
 
 class FabriqueBatiments {
-  public static init(json: Array<BatimentJson>): CustomArray<Batiment> {
-    const batiments: CustomArray<Batiment> = new CustomArray<Batiment>();
+  
+  public static init(json: Array<BatimentJson>): CustomArray<iBatiment> {
+    const batiments: CustomArray<iBatiment> = new CustomArray<iBatiment>();
 
     json.forEach((batiment) => {
       if (this.areRequiredFieldsInitialized(batiment)) {

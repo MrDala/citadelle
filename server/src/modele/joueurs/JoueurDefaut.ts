@@ -1,12 +1,11 @@
 import Batiment from "../batiments/Batiment";
-import ChoixAction from "../enum/ChoixAction";
+import iBatiment from "../batiments/iBatiments";
 import ERREURS from "../enum/Erreurs";
-import CustomArray from "../tools/CustomArray";
 import aJoueur from "./aJoueur";
 
 class JoueurDefaut extends aJoueur {
 
-  choix<T>(liste: Array<T>, nbChoixMax: number = 1): Array<T> {
+  public choix<T>(liste: Array<T>, nbChoixMax: number = 1): Array<T> {
     if (nbChoixMax <= 0 || nbChoixMax > liste.length) {
       throw new Error(ERREURS.ERREUR_CHOIX(liste));
     }
@@ -23,7 +22,7 @@ class JoueurDefaut extends aJoueur {
     return result;
   }
 
-  choixCarteBatiment(cartes: Array<Batiment>, nbBatimentsGardes = 1): Array<Batiment> {
+  public choixCarteBatiment(cartes: Array<iBatiment>, nbBatimentsGardes = 1): Array<iBatiment> {
     if (cartes.length === 0) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
@@ -32,17 +31,17 @@ class JoueurDefaut extends aJoueur {
       const randomIndex = Math.floor(Math.random() * cartes.length);
 
       const carteChoisie = cartes.splice(randomIndex, 1)[0];
-      this.batimentsEnMain.push(carteChoisie);
+      this.addBatimentsEnMain(carteChoisie);
     }
 
     return cartes;
   }
 
-  construireBatiment(): Batiment | null {
-    const batimentsConstructibles = new Array<Batiment>;
+  public construireBatiment(): iBatiment | null {
+    const batimentsConstructibles = new Array<iBatiment>;
 
-    this.batimentsEnMain.forEach(batiment => {
-      if (this.argent >= batiment.cout) {
+    this.getBatimentsEnMain().forEach(batiment => {
+      if (this.getArgent() >= batiment.getCout()) {
         batimentsConstructibles.push(batiment);
       }
     })
@@ -52,9 +51,9 @@ class JoueurDefaut extends aJoueur {
       const randomIndex = Math.floor(Math.random() * batimentsConstructibles.length);
       batimentChoisi = batimentsConstructibles.splice(randomIndex, 1)[0];
 
-      this.batimentsEnMain.transfer(this.batimentsPoses, batimentChoisi);
+      this.getBatimentsEnMain().transfer(this.getBatimentsPoses(), batimentChoisi);
 
-      this.argent -= batimentChoisi.cout;
+      this.variationArgent(-batimentChoisi.getCout());
     }
 
     return batimentChoisi;

@@ -4,56 +4,60 @@ import iJoueur from "../joueurs/iJoueur";
 import Roi from "../personnages/Roi";
 import iPersonnage from "../personnages/iPersonnage";
 import CustomArray from "../tools/CustomArray";
-import iRegles from "./iRegles";
+import iRegles, { CartesEcartees, DebutTour, Init } from "./iRegles";
 
 abstract class aRegles implements iRegles {
-  init: {
-    argent: number;
-    batimentsMain: number;
-  };
-  cartesEcartees: {
-    masqueesAvantDistribution: number;
-    masqueesApresDistribution: number;
-    visibles: number;
-  };
-  debutTour: {
-    argent: number;
-    argentParBatiment: number,
-    nbBatimentsPioches: number;
-    nbBatimentGardes: number;
-  };
+  private init: Init;
+  private cartesEcartees: CartesEcartees;
+  private debutTour: DebutTour;
 
   protected constructor({
-    init = { 
-      argent: 2, 
-      batimentsMain: 4 
+    init = {
+      argent: 2,
+      batimentsMain: 4
     },
-    cartesEcartees: {
-      masqueesAvantDistribution= 0,
-      masqueesApresDistribution= 0,
-      visibles= 0
+
+    cartesEcartees = {
+      masqueesAvantDistribution: 0,
+      masqueesApresDistribution: 0,
+      visibles: 0
     },
-    debutTour = { 
+
+    debutTour = {
       argent: 2,
       argentParBatiment: 1,
-      nbBatimentsPioches: 2, 
+      nbBatimentsPioches: 2,
       nbBatimentGardes: 1
     },
   }) {
     this.init = init;
-    this.cartesEcartees = {
-      masqueesAvantDistribution,
-      masqueesApresDistribution,
-      visibles
-    };
+    this.cartesEcartees = cartesEcartees;
     this.debutTour = debutTour;
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
+  getInit(): Init {
+    return this.init;
+  }
+
+  getCartesEcartees(): CartesEcartees {
+    return this.cartesEcartees;
+  }
+
+  getDebutTour(): DebutTour {
+    return this.debutTour;
+  }
+
+  public distribution(
+    indexPremierJoueur: number,
+    joueurs: CustomArray<iJoueur>,
+    personnages: CustomArray<iPersonnage>,
+    cartesVisibles: CustomArray<iPersonnage>,
+    cartesMasquees: CustomArray<iPersonnage>
+  ) {
     // Retrait des cartes VISIBLES
     for (let i = 0; i < this.cartesEcartees.visibles; i++) {
       let carte: iPersonnage | null = null;
-    
+
       while (!carte || carte instanceof Roi) {
         try {
           carte = personnages.shift()!;
@@ -76,11 +80,11 @@ abstract class aRegles implements iRegles {
         throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
       }
     }
-    
+
     // Choix du rôle par les joueurs
     joueurs.customForEach(indexPremierJoueur, joueur => {
       let personnageChoisi = joueur.choix(personnages)[0];
-      joueur.personnages.push(personnageChoisi);
+      joueur.prendrePersonnages(personnageChoisi);
     });
 
     // Retrait des carte MASQUEES
@@ -99,30 +103,30 @@ abstract class aRegles implements iRegles {
   }
 
   public isPartieTerminee(joueurs: CustomArray<iJoueur>): boolean {
-    return joueurs.some(joueur => joueur.batimentsPoses.length >= 8);
+    return joueurs.some(joueur => joueur.getBatimentsPoses().length >= 8);
   }
 
   calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur): number {
-      let score = 0;
+    let score = 0;
 
-      joueur.batimentsPoses.forEach(batiment => {
-        score += batiment.valeur;
-      });
+    joueur.getBatimentsPoses().forEach(batiment => {
+      score += batiment.getValeur();
+    });
 
-      const clansPossedes = new Set(joueur.batimentsPoses.map(batiment => batiment.clan));
-      const clansRequis = [Clan.NOBLE, Clan.COMMERCANT, Clan.RELIGIEUX, Clan.MILITAIRE, Clan.MERVEILLE];
-    
-      if (clansRequis.every(clan => clansPossedes.has(clan))) {
-        score += 3;
-      }
+    const clansPossedes = new Set(joueur.getBatimentsPoses().map(batiment => batiment.getClan()));
+    const clansRequis = [Clan.NOBLE, Clan.COMMERCANT, Clan.RELIGIEUX, Clan.MILITAIRE, Clan.MERVEILLE];
 
-      if (joueur === premierHuitBatiments) {
-        score += 4;
-      } else if (joueur.batimentsPoses.length >= 8) {
-        score += 2;
-      }
+    if (clansRequis.every(clan => clansPossedes.has(clan))) {
+      score += 3;
+    }
 
-      return score;
+    if (joueur === premierHuitBatiments) {
+      score += 4;
+    } else if (joueur.getBatimentsPoses().length >= 8) {
+      score += 2;
+    }
+
+    return score;
   }
 }
 

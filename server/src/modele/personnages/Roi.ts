@@ -10,11 +10,11 @@ class Roi extends aPersonnage {
   }
 
   public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
-    let joueurCouronne = joueurs.find(j => j.couronne);
+    let joueurCouronne = joueurs.find(j => j.getCouronne());
     if (joueurCouronne){
-      joueurCouronne.couronne = false;
+      joueurCouronne.setCouronne(false);
     }
-    joueur.couronne = true;
+    joueur.setCouronne(true);
   }
   
 }

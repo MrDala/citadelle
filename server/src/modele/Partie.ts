@@ -1,5 +1,4 @@
 import json from "./data/data.json";
-import Batiment from "./batiments/Batiment";
 import FabriqueBatiments from "./batiments/FabriqueBatiments";
 import ChoixAction from "./enum/ChoixAction";
 import ERREURS from "./enum/Erreurs";
@@ -9,11 +8,12 @@ import iPersonnage from "./personnages/iPersonnage";
 import FabriqueRegles from "./regles/FabriqueRegles";
 import iRegles from "./regles/iRegles";
 import CustomArray from "./tools/CustomArray";
+import iBatiment from "./batiments/iBatiments";
 
 class Partie {
   private regles: iRegles;
   private joueurs: CustomArray<iJoueur>;
-  private pioche: CustomArray<Batiment>;
+  private pioche: CustomArray<iBatiment>;
   private personnages: CustomArray<iPersonnage>;
   private cartesVisibles: CustomArray<iPersonnage>;
   private cartesMasquees: CustomArray<iPersonnage>;
@@ -29,7 +29,7 @@ class Partie {
 
     this.joueurs = joueurs;
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
-    this.pioche = new CustomArray<Batiment>(...FabriqueBatiments.init(json.batiments));
+    this.pioche = new CustomArray<iBatiment>(...FabriqueBatiments.init(json.batiments));
     this.pioche.melanger();
     this.personnages = FabriquePersonnages.initAll();
     this.cartesVisibles = new CustomArray<iPersonnage>();
@@ -56,17 +56,17 @@ class Partie {
 
   private initPartie(): void {
     this.joueurs.forEach(joueur => {
-      for (let i = 0; i < this.regles.init.batimentsMain; i++) {
+      for (let i = 0; i < this.regles.getInit().batimentsMain; i++) {
         let carte = this.pioche.shift();
         if (carte) {
-          joueur.batimentsEnMain.push(carte);
+          joueur.addBatimentsEnMain(carte);
         }
       }
-      joueur.argent += this.regles.init.argent;
+      joueur.variationArgent(this.regles.getInit().argent);
     });
 
     var indexCouronne = Math.floor(Math.random() * this.joueurs.length);
-    this.joueurs[indexCouronne].couronne = true;
+    this.joueurs[indexCouronne].setCouronne(true);
   }
 
   private tourDeJeu(): void {
@@ -80,7 +80,7 @@ class Partie {
   
     this.joueurs.forEach(joueur => {
       let score = this.regles.calculScore(joueur, this.premierHuitBatiments!);
-      classement.push({ pseudo: joueur.pseudo, score });
+      classement.push({ pseudo: joueur.getPseudo(), score });
     });
   
     // Trier le classement selon les scores (en ordre décroissant)
@@ -101,7 +101,7 @@ class Partie {
 
     // Appeler chaque joueur dans l'ordre de passage de leurs personnages
     personnagesTries.forEach((role) => {
-      if (role.personnage.vivant) {
+      if (role.personnage.getVivant()) {
         this.gainPassif(role.joueur, role.personnage);
         this.actionArgentOuPioche(role.joueur);
         this.actionPersonnage(role.joueur, role.personnage);
@@ -112,14 +112,14 @@ class Partie {
 
   private phaseFinDeTour(): void {
     this.joueurs.forEach(joueur => {
-      const personnagesRendus = joueur.rendrePersonnage();
+      const personnagesRendus = joueur.rendrePersonnages();
       this.personnages.push(...personnagesRendus);
     });
 
     this.cartesVisibles.transferAll(this.personnages);
     this.cartesMasquees.transferAll(this.personnages);
 
-    this.personnages.forEach(personnage => personnage.vivant = true);
+    this.personnages.forEach(personnage => personnage.setVivant(true));
 
     this.nombreTour++
   }
@@ -127,7 +127,7 @@ class Partie {
   /* Fonction utilitaires */
   private getIndexCouronne(): number {
     // Détermine l'index du premier joueur à jouer
-    const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.couronne === true);
+    const indexAvecCouronne = this.joueurs.findIndex(joueur => joueur.getCouronne() === true);
     if (indexAvecCouronne === -1) {
       throw new Error(ERREURS.ERREUR_COURRONNE());
     }
@@ -139,32 +139,32 @@ class Partie {
     const personnagesAvecJoueur = new CustomArray<{ joueur: iJoueur, personnage: iPersonnage }>();
 
     this.joueurs.forEach(joueur => {
-      joueur.personnages.forEach(personnage => {
+      joueur.getPersonnages().forEach(personnage => {
         personnagesAvecJoueur.push({ joueur, personnage });
       });
     });
   
-    return personnagesAvecJoueur.sort((a, b) => a.personnage.ordre - b.personnage.ordre); // Trier les personnages par leur ordre de passage
+    return personnagesAvecJoueur.sort((a, b) => a.personnage.getOrdre() - b.personnage.getOrdre()); // Trier les personnages par leur ordre de passage
   }
 
   private gainPassif(joueur: iJoueur, personnage: iPersonnage) : void {
-    joueur.batimentsPoses.forEach(batiment => {
-      if (batiment.clan === personnage.clan) {
-        joueur.argent += this.regles.debutTour.argent;
+    joueur.getBatimentsPoses().forEach(batiment => {
+      if (batiment.getClan() === personnage.getClan()) {
+        joueur.variationArgent(this.regles.getDebutTour().argent);
       }
     })
   }
 
-  private actionArgentOuPioche(joueur: iJoueur): number | CustomArray<Batiment> {
+  private actionArgentOuPioche(joueur: iJoueur): number | CustomArray<iBatiment> {
     const action = joueur.choix(Object.values(ChoixAction))[0];
 
     switch (action) {
       case ChoixAction.ARGENT:
-        joueur.argent += this.regles.debutTour.argent;
+        joueur.variationArgent(this.regles.getDebutTour().argent);
         break;
       case ChoixAction.PIOCHE:
-        const cartes = new CustomArray<Batiment>;
-        for (let i=0; i < this.regles.debutTour.nbBatimentsPioches; i++) {
+        const cartes = new CustomArray<iBatiment>;
+        for (let i=0; i < this.regles.getDebutTour().nbBatimentsPioches; i++) {
           let carte;
           carte = this.pioche.shift();
           
@@ -174,7 +174,7 @@ class Partie {
         }
 
         if (cartes.length > 0) {
-          this.pioche.push(...joueur.choixCarteBatiment(cartes, this.regles.debutTour.nbBatimentGardes));
+          this.pioche.push(...joueur.choixCarteBatiment(cartes, this.regles.getDebutTour().nbBatimentGardes));
         }
     }
     return 0;
@@ -187,7 +187,7 @@ class Partie {
   private actionConstruire(joueur: iJoueur) {
     joueur.construireBatiment();
 
-    if (joueur.batimentsPoses.length >= 8 && !this.premierHuitBatiments) {
+    if (joueur.getBatimentsPoses().length >= 8 && !this.premierHuitBatiments) {
       this.premierHuitBatiments = joueur;
     }
   }

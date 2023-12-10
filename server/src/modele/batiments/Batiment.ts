@@ -1,21 +1,22 @@
 import Clan from "../enum/Clan";
 import ERREURS from "../enum/Erreurs";
-import { Effets, effet } from "./Effets";
+import { Effets, Effet } from "./Effets";
+import iBatiment from "./iBatiments";
 
 export type typeBatiment = {
   nom: string, 
   cout: number, 
   valeur: number, 
   clan: Clan, 
-  effet?: effet
+  effet?: Effet
 }
 
-class Batiment {
-  nom: string;
-  cout: number;
-  valeur: number;
-  clan: Clan;
-  effet?: effet;
+class Batiment implements iBatiment{
+  private readonly nom: string;
+  private readonly cout: number;
+  private readonly valeur: number;
+  private readonly clan: Clan;
+  private readonly effet: Effet | null;
 
   public constructor(batiment : typeBatiment) {
     this.checkFields(batiment);
@@ -24,7 +25,23 @@ class Batiment {
     this.cout = batiment.cout;
     this.valeur = batiment.valeur;
     this.clan = batiment.clan;
-    this.effet = batiment.effet;
+    this.effet = batiment.effet ?? null;
+  }
+
+  getNom(): string {
+    return this.nom;
+  }
+  getCout(): number {
+    return this.cout;
+  }
+  getValeur(): number {
+    return this.valeur;
+  }
+  getClan(): Clan {
+    return this.clan;
+  }
+  getEffet(): Effet | null {
+    return this.effet;
   }
 
   private checkFields(batiment: typeBatiment): void {

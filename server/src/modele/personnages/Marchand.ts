@@ -10,7 +10,7 @@ class Marchand extends aPersonnage {
   }
 
   public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
-    joueur.argent += 1;
+    joueur.variationArgent(1);
   }
 }
 

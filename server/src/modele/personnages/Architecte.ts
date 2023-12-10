@@ -14,7 +14,7 @@ class Architecte extends aPersonnage {
     for (let i=0; i< nbCartesPiochees; i++) {
       if(piocheBatiment.length > 0) {
         const batimentPioche = piocheBatiment.shift();
-        joueur.batimentsEnMain.push(batimentPioche!);
+        joueur.addBatimentsEnMain(batimentPioche!);
       }
     }
   }

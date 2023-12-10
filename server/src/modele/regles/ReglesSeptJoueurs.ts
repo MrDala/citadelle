@@ -25,7 +25,7 @@ class ReglesSeptJoueurs extends aRegles {
     // Choix d'un personnage pour chaque joueur SAUF le dernier
     joueurs.forEachInRange(indexPremierJoueur, indexPremierJoueur-2, (joueur) => {
       let personnageChoisi = joueur.choix(personnages)[0]; // Choix du personnage
-      joueur.personnages.push(personnageChoisi);
+      joueur.prendrePersonnages(personnageChoisi);
     })
 
     // Ajout de la carte masquée dans la liste des cartes à personnages
@@ -35,7 +35,7 @@ class ReglesSeptJoueurs extends aRegles {
     var indexDernierJoueur = (indexPremierJoueur - 1 >= 0) ? (indexPremierJoueur - 1) % joueurs.length : indexPremierJoueur - 1 + joueurs.length;
     const dernierJoueur = joueurs[indexDernierJoueur];
     let personnageChoisi = dernierJoueur.choix(personnages)[0]; // Choix du personnage
-    dernierJoueur.personnages.push(personnageChoisi);
+    dernierJoueur.prendrePersonnages(personnageChoisi);
 
     // Retrait des carte MASQUEES
     if (personnages.length === 0) {

@@ -1,9 +1,9 @@
-export type effet = {
+export type Effet = {
   description : string,
   function : Function
 }
 
-export const Effets : Record<string, effet> = {
+export const Effets : Record<string, Effet> = {
   "COUR_MIRACLE": {
     description: "Pour le décompte final des points, la cour des miracles est considérée comme un quartier de la couleur de votre choix. Vous ne pouvez pas utiliser cette capacité si vous avez construit la cour des miracles au dernier tour de jeu.",
     function: () => {}

@@ -25,7 +25,7 @@ class ReglesTroisJoueurs extends aRegles {
 
     joueurs.customForEach(indexPremierJoueur, joueur => {
       let personnageChoisi = joueur.choix(personnages)[0]; // Choix du personnage
-      joueur.personnages.push(personnageChoisi);
+      joueur.prendrePersonnages(personnageChoisi);
     }, 2)
 
     // Retrait d'un personnage

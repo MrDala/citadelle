@@ -29,25 +29,25 @@ class ReglesDeuxJoueurs extends aRegles {
 
     // JOUEUR 1
     personnageChoisi = joueurUn.choix(personnages)[0]; // Choix du personnage
-    joueurUn.personnages.push(personnageChoisi);   
+    joueurUn.prendrePersonnages(personnageChoisi);   
 
     // JOUEUR 2
     personnageChoisi = joueurDeux.choix(personnages)[0]; // Choix du personnage
-    joueurDeux.personnages.push(personnageChoisi);
+    joueurDeux.prendrePersonnages(personnageChoisi);
 
     personnageChoisi = joueurDeux.choix(personnages)[0]; // Retrait d'un personnage
     cartesMasquees.push(personnageChoisi);      
 
     // JOUEUR 1
     personnageChoisi = joueurUn.choix(personnages)[0]; // Choix du personnage
-    joueurUn.personnages.push(personnageChoisi);
+    joueurUn.prendrePersonnages(personnageChoisi);
 
     personnageChoisi = joueurUn.choix(personnages)[0]; // Retrait d'un personnage
     cartesMasquees.push(personnageChoisi);      
 
     // JOUEUR 2
     personnageChoisi = joueurDeux.choix(personnages)[0]; // Choix du personnage
-    joueurDeux.personnages.push(personnageChoisi);
+    joueurDeux.prendrePersonnages(personnageChoisi);
 
     // Retrait d'un personnage
     try {

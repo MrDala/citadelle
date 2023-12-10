@@ -49,21 +49,21 @@ describe('Batiment', () => {
   test('should create an instance of Batiment with an undefined effect', () => {
     const batiment = new Batiment(batimentSimple);
 
-    expect(batiment.nom).toBe(batimentSimple.nom);
-    expect(batiment.cout).toBe(batimentSimple.cout);
-    expect(batiment.valeur).toBe(batimentSimple.valeur);
-    expect(batiment.clan).toBe(batimentSimple.clan);
-    expect(batiment.effet).toBeUndefined();
+    expect(batiment.getNom()).toBe(batimentSimple.nom);
+    expect(batiment.getCout()).toBe(batimentSimple.cout);
+    expect(batiment.getValeur()).toBe(batimentSimple.valeur);
+    expect(batiment.getClan()).toBe(batimentSimple.clan);
+    expect(batiment.getEffet()).toBeNull();
   });
 
   test('should create an instance of Batiment with the provided effect', () => {
     const batiment = new Batiment(batimentEffet);
 
-    expect(batiment.nom).toBe(batimentEffet.nom);
-    expect(batiment.cout).toBe(batimentEffet.cout);
-    expect(batiment.valeur).toBe(batimentEffet.valeur);
-    expect(batiment.clan).toBe(batimentEffet.clan);
-    expect(batiment.effet).toBe(Effets["DONJON"]);
+    expect(batiment.getNom()).toBe(batimentEffet.nom);
+    expect(batiment.getCout()).toBe(batimentEffet.cout);
+    expect(batiment.getValeur()).toBe(batimentEffet.valeur);
+    expect(batiment.getClan()).toBe(batimentEffet.clan);
+    expect(batiment.getEffet()).toBe(Effets["DONJON"]);
   });
 
   test('should throw an error for missing  properties', () => {

@@ -1,15 +1,16 @@
-import Batiment from "../batiments/Batiment";
+import iBatiment from "../batiments/iBatiments";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
 import CustomArray from "../tools/CustomArray";
 
 interface iPersonnage {
-  nom: string;
-  clan: Clan;
-  ordre: number;
-  vivant: boolean;
+  action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<iBatiment>): void;
   
-  action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>): void;
+  getNom(): string;
+  getClan(): Clan;
+  getOrdre(): number;
+  getVivant(): boolean;
+  setVivant(vivant: boolean): void;
 }
 
 export default iPersonnage;

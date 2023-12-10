@@ -12,10 +12,10 @@ class Assassin extends aPersonnage {
 
   public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
     let personnages = new CustomArray<iPersonnage>;
-    joueurs.forEach(joueur => personnages.push(...joueur.personnages));
+    joueurs.forEach(joueur => personnages.push(...joueur.getPersonnages()));
 
     let personnage = joueur.choix(personnages)[0];
-    personnage.vivant = false;
+    personnage.setVivant(false);
   }
 }
 
