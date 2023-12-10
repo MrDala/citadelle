@@ -26,11 +26,12 @@ abstract class aJoueur implements iJoueur {
   abstract choixArgentPioche(): ChoixAction;
   abstract construireBatiment(): Batiment | null;
 
-  choixPersonnage(personnages: CustomArray<iPersonnage>): void {
+  choixCarte<T extends iPersonnage | Batiment>(listeCartes: CustomArray<T>): T {
     try {
-      this.personnages.push(personnages.shift()!);
+      const indiceAleatoire = Math.floor(Math.random() * listeCartes.length);
+      return listeCartes.splice(indiceAleatoire, 1)[0];
     } catch (error) {
-      new Error("[ERROR]: Impossible de choisir un personnage.")
+      throw new Error("[ERROR]: Impossible de choisir une carte.");
     }
   }
 

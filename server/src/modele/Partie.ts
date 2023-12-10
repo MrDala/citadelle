@@ -101,10 +101,12 @@ class Partie {
 
     // Appeler chaque joueur dans l'ordre de passage de leurs personnages
     personnagesTries.forEach((role) => {
-      this.gainPassif(role.joueur, role.personnage);
-      this.actionArgentOuPioche(role.joueur);
-      this.actionPersonnage(role.joueur, role.personnage);
-      this.actionConstruire(role.joueur);
+      if (role.personnage.vivant) {
+        this.gainPassif(role.joueur, role.personnage);
+        this.actionArgentOuPioche(role.joueur);
+        this.actionPersonnage(role.joueur, role.personnage);
+        this.actionConstruire(role.joueur);
+      }
     });
   }
 
@@ -116,6 +118,8 @@ class Partie {
 
     this.cartesVisibles.transferAll(this.personnages);
     this.cartesMasquees.transferAll(this.personnages);
+
+    this.personnages.forEach(personnage => personnage.vivant = true);
 
     this.nombreTour++
   }
@@ -177,7 +181,7 @@ class Partie {
   }
 
   private actionPersonnage(joueur: iJoueur, personnage: iPersonnage) : void {
-    personnage.action(joueur);
+    personnage.action(joueur, this.joueurs, this.pioche);
   }
 
   private actionConstruire(joueur: iJoueur) {

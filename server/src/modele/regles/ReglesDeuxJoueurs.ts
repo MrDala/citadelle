@@ -18,6 +18,7 @@ class ReglesDeuxJoueurs extends aRegles {
   public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
     const joueurUn = joueurs[indexPremierJoueur];
     const joueurDeux = joueurs[(indexPremierJoueur + 1) % 2];
+    let personnageChoisi : iPersonnage;
 
     // Retrait d'un personnage
     try {
@@ -27,18 +28,26 @@ class ReglesDeuxJoueurs extends aRegles {
     }
 
     // JOUEUR 1
-    joueurUn.choixPersonnage(personnages, joueurUn.personnages);    // Choix du personnage
+    personnageChoisi = joueurUn.choixCarte(personnages); // Choix du personnage
+    joueurUn.personnages.push(personnageChoisi);   
 
     // JOUEUR 2
-    joueurDeux.choixPersonnage(personnages, joueurUn.personnages);  // Choix du personnage
-    joueurDeux.choixPersonnage(personnages, cartesMasquees);        // Retrait d'un personnage
+    personnageChoisi = joueurDeux.choixCarte(personnages); // Choix du personnage
+    joueurDeux.personnages.push(personnageChoisi);
+
+    personnageChoisi = joueurDeux.choixCarte(personnages); // Retrait d'un personnage
+    cartesMasquees.push(personnageChoisi);      
 
     // JOUEUR 1
-    joueurUn.choixPersonnage(personnages, joueurUn.personnages);    // Choix du personnage
-    joueurUn.choixPersonnage(personnages, cartesMasquees);          // Retrait d'un personnage
+    personnageChoisi = joueurUn.choixCarte(personnages); // Choix du personnage
+    joueurUn.personnages.push(personnageChoisi);
+
+    personnageChoisi = joueurUn.choixCarte(personnages); // Retrait d'un personnage
+    cartesMasquees.push(personnageChoisi);      
 
     // JOUEUR 2
-    joueurDeux.choixPersonnage(personnages, joueurUn.personnages);  // Choix du personnage
+    personnageChoisi = joueurDeux.choixCarte(personnages); // Choix du personnage
+    joueurDeux.personnages.push(personnageChoisi);
 
     // Retrait d'un personnage
     try {

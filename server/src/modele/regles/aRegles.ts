@@ -79,7 +79,8 @@ abstract class aRegles implements iRegles {
     
     // Choix du rôle par les joueurs
     joueurs.customForEach(indexPremierJoueur, joueur => {
-      joueur.choixPersonnage(personnages, joueur.personnages);
+      let personnageChoisi = joueur.choixCarte(personnages);
+      joueur.personnages.push(personnageChoisi);
     });
 
     // Retrait des carte MASQUEES
