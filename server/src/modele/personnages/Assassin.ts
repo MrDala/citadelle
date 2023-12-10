@@ -14,7 +14,7 @@ class Assassin extends aPersonnage {
     let personnages = new CustomArray<iPersonnage>;
     joueurs.forEach(joueur => personnages.push(...joueur.personnages));
 
-    let personnage = joueur.choixCarte(personnages);
+    let personnage = joueur.choix(personnages)[0];
     personnage.vivant = false;
   }
 }

@@ -17,7 +17,10 @@ const ERREURS: Record<string, Erreur> = {
   ERREUR_DISTRIBUTION: () => "[ERREUR]: Le nombre de cartes distribuées ne correspond pas au nombre de joueurs.",
 
   // Ordre de jeu
-  ERREUR_COURRONNE: () => "[ERREUR]: Impossible de trouver un joueur avec une couronne."
+  ERREUR_COURRONNE: () => "[ERREUR]: Impossible de trouver un joueur avec une couronne.",
+
+  // Interraction avec le joueur
+  ERREUR_CHOIX: (liste: Array<any>) => `[ERREUR]: Impossible de faire un choix dans la liste : ${liste}`
 };
 
 export default ERREURS;

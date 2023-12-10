@@ -4,7 +4,6 @@ import iJoueur from "../joueurs/iJoueur";
 import CustomArray from "../tools/CustomArray";
 import Eveque from "./Eveque";
 import aPersonnage from "./aPersonnage";
-import iPersonnage from "./iPersonnage";
 
 class Condottiere extends aPersonnage {
   public constructor() {
@@ -13,15 +12,15 @@ class Condottiere extends aPersonnage {
 
   public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
     // Liste des joueurs attaquables (sauf le joueur avec le personnage Évêque)
-    let joueursAttaquables = joueurs.filter(j => !j.personnages.some(p => p instanceof Eveque));
+    let joueursAttaquables = joueurs.filter(j => !j.personnages.some(p => p instanceof Eveque) && j.batimentsPoses.length < 8);
   
     // Liste des bâtiments attaquables (condition : joueur.argent >= batiment.cout - 1)
-    let batimentsAttaquables : CustomArray<Batiment> = joueursAttaquables.flatMap(j => j.batimentsPoses.filter(b => joueur.argent >= b.cout - 1)) as CustomArray<Batiment>;
+    let batimentsAttaquables = joueursAttaquables.flatMap(j => j.batimentsPoses.filter(b => joueur.argent >= b.cout - 1)) as CustomArray<Batiment>;
     
     let batimentChoisi : Batiment | null = null;
 
     if (batimentsAttaquables.length > 0){
-      batimentChoisi = joueur.choixCarte(batimentsAttaquables);
+      batimentChoisi = joueur.choix(batimentsAttaquables)[0];
     }
   
     if (batimentChoisi) {

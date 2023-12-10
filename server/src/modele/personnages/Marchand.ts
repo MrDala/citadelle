@@ -3,7 +3,6 @@ import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
 import CustomArray from "../tools/CustomArray";
 import aPersonnage from "./aPersonnage";
-import iPersonnage from "./iPersonnage";
 
 class Marchand extends aPersonnage {
   public constructor() {
@@ -11,7 +10,7 @@ class Marchand extends aPersonnage {
   }
 
   public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
-    // console.log("Le Marchand a joué !");
+    joueur.argent += 1;
   }
 }
 

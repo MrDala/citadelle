@@ -156,7 +156,7 @@ class Partie {
   }
 
   private actionArgentOuPioche(joueur: iJoueur): number | CustomArray<Batiment> {
-    const action = joueur.choixArgentPioche();
+    const action = joueur.choix(Object.values(ChoixAction))[0];
 
     switch (action) {
       case ChoixAction.ARGENT:

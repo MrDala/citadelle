@@ -3,7 +3,6 @@ import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
 import CustomArray from "../tools/CustomArray";
 import aPersonnage from "./aPersonnage";
-import iPersonnage from "./iPersonnage";
 
 class Voleur extends aPersonnage {
   public constructor() {

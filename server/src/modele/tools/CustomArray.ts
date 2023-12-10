@@ -21,17 +21,16 @@ class CustomArray<T> extends Array<T> {
     }
   }
 
-  public transfer(destination: CustomArray<T>, elementsToTransfer: T | T[]): void {
+  public transfer(destination: Array<T>, elementsToTransfer: T | T[]): void {
     if (Array.isArray(elementsToTransfer)) {
       destination.push(...elementsToTransfer);
-      this.remove(elementsToTransfer);
     } else {
       destination.push(elementsToTransfer);
-      this.remove(elementsToTransfer);
     }
+    this.remove(elementsToTransfer);
   }
 
-  public transferAll(destination: CustomArray<T>): void {
+  public transferAll(destination: Array<T>): void {
     destination.push(...this);
     this.removeAll();
   }

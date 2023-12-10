@@ -24,7 +24,7 @@ class ReglesTroisJoueurs extends aRegles {
     }
 
     joueurs.customForEach(indexPremierJoueur, joueur => {
-      let personnageChoisi = joueur.choixCarte(personnages); // Choix du personnage
+      let personnageChoisi = joueur.choix(personnages)[0]; // Choix du personnage
       joueur.personnages.push(personnageChoisi);
     }, 2)
 

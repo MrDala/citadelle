@@ -1,10 +1,13 @@
+import { UUID, randomUUID } from "crypto";
 import Batiment from "../batiments/Batiment";
 import ChoixAction from "../enum/ChoixAction";
+import ERREURS from "../enum/Erreurs";
 import iPersonnage from "../personnages/iPersonnage";
 import CustomArray from "../tools/CustomArray";
 import iJoueur from "./iJoueur";
 
 abstract class aJoueur implements iJoueur {
+  id: UUID;
   pseudo: string;
   couronne: boolean;
   personnages: CustomArray<iPersonnage>;
@@ -13,6 +16,7 @@ abstract class aJoueur implements iJoueur {
   argent: number;
 
   constructor(pseudo: string) {
+    this.id = randomUUID()    ;
     this.pseudo = pseudo;
     this.couronne = false;
     this.personnages = new CustomArray<iPersonnage>();
@@ -22,21 +26,12 @@ abstract class aJoueur implements iJoueur {
   }
 
   /* Fonction à implémenter dans les classes enfants */
-  abstract choixCarteBatiment(cartes: CustomArray<Batiment>, nbBatimentsGardes: number): CustomArray<Batiment>;
-  abstract choixArgentPioche(): ChoixAction;
+  abstract choixCarteBatiment(cartes: Array<Batiment>, nbBatimentsGardes: number): Array<Batiment>;
   abstract construireBatiment(): Batiment | null;
+  abstract choix<T>(liste: Array<T>, nbChoixMax?: number): Array<T>;
 
-  choixCarte<T extends iPersonnage | Batiment>(listeCartes: CustomArray<T>): T {
-    try {
-      const indiceAleatoire = Math.floor(Math.random() * listeCartes.length);
-      return listeCartes.splice(indiceAleatoire, 1)[0];
-    } catch (error) {
-      throw new Error("[ERROR]: Impossible de choisir une carte.");
-    }
-  }
-
-  rendrePersonnage(): CustomArray<iPersonnage> {
-    var personnagesRendus = new CustomArray<iPersonnage>();
+  rendrePersonnage(): Array<iPersonnage> {
+    var personnagesRendus = new Array<iPersonnage>();
 
     this.personnages.transferAll(personnagesRendus);
 
