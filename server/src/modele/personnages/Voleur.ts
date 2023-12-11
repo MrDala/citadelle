@@ -1,14 +1,14 @@
-import Batiment from "../batiments/Batiment";
+import iBatiment from "../batiments/iBatiments";
 import Clan from "../enum/Clan";
-import iJoueur from "../joueurs/iJoueur";
 import aPersonnage from "./aPersonnage";
+import iPersonnage from "./iPersonnage";
 
 class Voleur extends aPersonnage {
   public constructor() {
     super("Voleur", Clan.NEUTRE, 2)
   }
 
-  public action(joueur: iJoueur, joueurs: Array<iJoueur>, piocheBatiment: Array<Batiment>) {
+  public action(personnages: Array<iPersonnage>, piocheBatiment: Array<iBatiment>) {
 
   }
 }

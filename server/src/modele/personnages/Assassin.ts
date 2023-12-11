@@ -1,19 +1,20 @@
-import Batiment from "../batiments/Batiment";
 import Clan from "../enum/Clan";
-import iJoueur from "../joueurs/iJoueur";
-import aPersonnage from "./aPersonnage";
 import iPersonnage from "./iPersonnage";
+import iBatiment from "../batiments/iBatiments";
+import aPersonnage from "./aPersonnage";
+
 
 class Assassin extends aPersonnage {
   public constructor() {
     super("Assassin", Clan.NEUTRE, 1)
   }
 
-  public action(joueur: iJoueur, joueurs: Array<iJoueur>, piocheBatiment: Array<Batiment>) {
-    let personnages = new Array<iPersonnage>;
-    joueurs.forEach(joueur => personnages.push(...joueur.getPersonnages()));
+  public action(personnages: Array<iPersonnage>, piocheBatiment: Array<iBatiment>) {
+    const joueur = this.getJoueur();
+    if (!joueur) return;
 
-    let personnage = joueur.choix(personnages)[0];
+    const personnagesAttaquables = personnages.filter(personnage => personnage.getJoueur() === this.getJoueur());
+    let personnage = joueur.choix(personnagesAttaquables)[0];
     personnage.setVivant(false);
   }
 }

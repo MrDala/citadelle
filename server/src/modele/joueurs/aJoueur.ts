@@ -37,9 +37,6 @@ abstract class aJoueur implements iJoueur {
   public getCouronne(): boolean {
     return this.couronne;
   }
-  public getPersonnages(): Array<iPersonnage> {
-    return this.personnages;
-  }
   public getBatimentsEnMain(): Array<iBatiment> {
     return this.batimentsEnMain;
   }
@@ -72,22 +69,6 @@ abstract class aJoueur implements iJoueur {
 
   public variationArgent(montant: number) {
     this.argent += montant;
-  }
-
-  public prendrePersonnages(personnages: iPersonnage | Array<iPersonnage>): void {
-    if (personnages instanceof Array) {
-      this.personnages.push(...personnages);
-    } else {
-      this.personnages.push(personnages);
-    }
-  }
-
-  public rendrePersonnages(): Array<iPersonnage> {
-    var personnagesRendus = new Array<iPersonnage>();
-    personnagesRendus.push(...this.personnages);
-    this.personnages.length = 0;
-
-    return personnagesRendus;
   }
 }
 

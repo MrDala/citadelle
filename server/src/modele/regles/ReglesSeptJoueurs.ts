@@ -1,5 +1,6 @@
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
+import PilePersonnage from "../personnages/PilePersonnage";
 import iPersonnage from "../personnages/iPersonnage";
 import aRegles from "./aRegles";
 
@@ -14,40 +15,44 @@ class ReglesSeptJoueurs extends aRegles {
     })
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: Array<iPersonnage>, cartesVisibles: Array<iPersonnage>, cartesMasquees: Array<iPersonnage>) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: PilePersonnage) {
+    let cartes = personnages.getCartesChoisissables();
+    let carteMasquee: iPersonnage;
+
     // Retrait d'une carte MASQUEE
-    if (personnages.length === 0) {
+    try {
+      carteMasquee = cartes[Math.floor(Math.random() * cartes.length)];
+      personnages.setCarteMasquee(carteMasquee);
+    } catch (error) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
-    cartesMasquees.push(personnages.shift()!);
 
+    // Choix des personnages pour les 7 premier joueurs
     for(let i=0; i < joueurs.length - 1; i++){
-      let currentIndex = (indexPremierJoueur + i) % joueurs.length;
+      const currentIndex = (indexPremierJoueur + i) % joueurs.length;
       const joueur = joueurs[currentIndex];
+      cartes = personnages.getCartesChoisissables();
 
-      let personnageChoisi = joueur.choix(personnages)[0];
-      joueur.prendrePersonnages(personnageChoisi);
+      const personnageChoisi = joueur.choix(cartes)[0];
+      personnageChoisi.setJoueur(joueur);
     }
 
     // Ajout de la carte masquée dans la liste des cartes à personnages
-    personnages.push(cartesMasquees.shift()!);
-
-    // Choix du personnage par le dernier joueur parmi 2 cartes restantes
-    var indexDernierJoueur = (indexPremierJoueur - 1 >= 0) ? (indexPremierJoueur - 1) % joueurs.length : indexPremierJoueur - 1 + joueurs.length;
-    const dernierJoueur = joueurs[indexDernierJoueur];
-    let personnageChoisi = dernierJoueur.choix(personnages)[0]; // Choix du personnage
-    dernierJoueur.prendrePersonnages(personnageChoisi);
-
-    // Retrait des carte MASQUEES
-    if (personnages.length === 0) {
+    try {
+      personnages.setCarteJouable(carteMasquee);
+    } catch (error) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
-    cartesMasquees.push(personnages.shift()!);
 
-    // Contrôle de la bonne distribution
-    if (personnages.length !== 0) {
-      throw new Error(ERREURS.ERREUR_DISTRIBUTION());
-    }
+    // Identification du dernier joueur
+    const indexDernierJoueur = (indexPremierJoueur - 1 + joueurs.length) % joueurs.length;
+    const dernierJoueur = joueurs[indexDernierJoueur];
+
+    
+    // Choix du personnage
+    cartes = personnages.getCartesChoisissables();
+    const personnageChoisi = dernierJoueur.choix(cartes)[0]; // Choix du personnage
+    personnageChoisi.setJoueur(dernierJoueur);
   }
 }
 

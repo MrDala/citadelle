@@ -15,8 +15,10 @@ joueurs.push(new JoueurDefaut("JB"));
 joueurs.push(new JoueurDefaut("Aurélie"));
 joueurs.push(new JoueurDefaut("Clément"));
 
-const partie = new Partie(joueurs);
-partie.jouer();
+for (let i=0; i<1; i++) {
+  const partie = new Partie(joueurs);
+  partie.jouer();
+}
 
 // app.get('/', (req, res) => {
 //   res.send('Hello World!');

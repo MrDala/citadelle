@@ -1,6 +1,6 @@
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
-import iPersonnage from "../personnages/iPersonnage";
+import PilePersonnage from "../personnages/PilePersonnage";
 import aRegles from "./aRegles";
 
 class ReglesTroisJoueurs extends aRegles {
@@ -14,31 +14,42 @@ class ReglesTroisJoueurs extends aRegles {
     })
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: Array<iPersonnage>, cartesVisibles: Array<iPersonnage>, cartesMasquees: Array<iPersonnage>) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: PilePersonnage) {
+    let cartes = personnages.getCartesChoisissables();
+    
     // Retrait d'un personnage
     try {
-      cartesMasquees.push(personnages.shift()!);
+      personnages.setCarteMasquee(cartes[Math.floor(Math.random() * cartes.length)]);
     } catch (error) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
 
+
     for (let i = 0; i < joueurs.length * 2; i++) {
+      // Actualisation de la liste de cartes choisissables
+      cartes = personnages.getCartesChoisissables();
+
+      // Identification du joueur courant
       const currentIndex = (indexPremierJoueur + i) % joueurs.length;
       const joueur = joueurs[currentIndex];
-      const personnageChoisi = joueur.choix(personnages)[0];
-      joueur.prendrePersonnages(personnageChoisi);
+
+      // Choix du personnage
+      const personnageChoisi = joueur.choix(cartes)[0];
+      personnageChoisi.setJoueur(joueur);
     }
     
 
     // Retrait d'un personnage
+    cartes = personnages.getCartesChoisissables();
     try {
-      cartesMasquees.push(personnages.shift()!);
+      personnages.setCarteMasquee(cartes[Math.floor(Math.random() * cartes.length)]);
     } catch (error) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
 
     // Contrôle de la bonne distribution
-    if (personnages.length !== 0) {
+    cartes = personnages.getCartesChoisissables();
+    if (cartes.length !== 0) {
       throw new Error(ERREURS.ERREUR_DISTRIBUTION());
     }
   }

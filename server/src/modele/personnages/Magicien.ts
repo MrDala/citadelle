@@ -5,16 +5,23 @@ import aPersonnage from "./aPersonnage";
 import ERREURS from "../enum/Erreurs";
 import ChoixMagicien from "../enum/ChoixMagicien";
 import iBatiment from "../batiments/iBatiments";
+import iPersonnage from "./iPersonnage";
 
 class Magicien extends aPersonnage {
   public constructor() {
     super("Magicien", Clan.NEUTRE, 3)
   }
 
-  public action(joueur: iJoueur, joueurs: Array<iJoueur>, piocheBatiment: Array<iBatiment>) {
+  public action(personnages: Array<iPersonnage>, piocheBatiment: Array<iBatiment>) {
+    const joueur = this.getJoueur();
+    if (!joueur) return;
+    
     const actionsPossibles = Object.values(ChoixMagicien);
     const actionChoisie = piocheBatiment.length !== 0 && joueur.getBatimentsEnMain().length !== 0 ? joueur.choix(actionsPossibles)[0] : ChoixMagicien.VOL_JOUEUR;
-
+    const joueurs = personnages
+    .map(personnage => personnage.getJoueur())
+    .filter((joueur): joueur is iJoueur => joueur !== null);
+  
     switch (actionChoisie) {
       case ChoixMagicien.ECHANGE_PIOCHE:
         this.echangeAvecPioche(joueur, piocheBatiment);

@@ -1,21 +1,20 @@
 import json from "./data/data.json";
-import FabriqueBatiments from "./batiments/FabriqueBatiments";
 import ChoixAction from "./enum/ChoixAction";
 import ERREURS from "./enum/Erreurs";
-import iJoueur from "./joueurs/iJoueur";
+import FabriqueBatiments from "./batiments/FabriqueBatiments";
 import FabriquePersonnages from "./personnages/FabriquePersonnage";
-import iPersonnage from "./personnages/iPersonnage";
 import FabriqueRegles from "./regles/FabriqueRegles";
+import iJoueur from "./joueurs/iJoueur";
+import iPersonnage from "./personnages/iPersonnage";
 import iRegles from "./regles/iRegles";
 import iBatiment from "./batiments/iBatiments";
+import PilePersonnage from "./personnages/PilePersonnage";
 
 class Partie {
   private regles: iRegles;
   private joueurs: Array<iJoueur>;
   private pioche: Array<iBatiment>;
-  private personnages: Array<iPersonnage>;
-  private cartesVisibles: Array<iPersonnage>;
-  private cartesMasquees: Array<iPersonnage>;
+  private personnages: PilePersonnage;
   private nombreTour: number;
   private premierHuitBatiments: iJoueur | null;
 
@@ -30,24 +29,21 @@ class Partie {
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
     this.pioche = new Array<iBatiment>(...FabriqueBatiments.init(json.batiments));
     this.pioche.sort(() => Math.random() - 0.5);
-    this.personnages = FabriquePersonnages.initAll();
-    this.cartesVisibles = new Array<iPersonnage>();
-    this.cartesMasquees = new Array<iPersonnage>();
-    this.nombreTour = 1;
+    this.personnages = new PilePersonnage(FabriquePersonnages.initAll());
+    this.nombreTour = 0;
     this.premierHuitBatiments = null;
   }
 
   public jouer(): void {
     console.log("DEBUT DE LA PARTIE");
-
+    console.log(this.nombreTour);
     this.initPartie();
-  
     do {
       this.tourDeJeu();
     } while (!this.regles.isPartieTerminee(this.joueurs));
   
     let classement = this.getClassement();
-
+  
     console.log("Nombre de tour joués : " + this.nombreTour + "\n");
     console.log(classement);
     console.log("\nFIN DE LA PARTIE");
@@ -69,6 +65,7 @@ class Partie {
   }
 
   private tourDeJeu(): void {
+    this.nombreTour++;
     this.phaseChoixDuRole();
     this.phaseAction();
     this.phaseFinDeTour();
@@ -90,40 +87,32 @@ class Partie {
 
   /* Phase d'un tour de jeu */
   private phaseChoixDuRole(): void {
-    this.personnages.sort(() => Math.random() - 0.5);
+    this.personnages.getCartesChoisissables().sort(() => Math.random() - 0.5);
     const indexPremierJoueur = this.getIndexCouronne();
-    this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages, this.cartesVisibles, this.cartesMasquees);
+
+    this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages);
   }
 
   private phaseAction(): void {
-    const personnagesTries = this.getPersonnagesTries();
+    const personnagesJouables = this.personnages.getCartesTous();
+    const personnagesTries = personnagesJouables.sort((a, b) => a.getOrdre() - b.getOrdre());
 
     // Appeler chaque joueur dans l'ordre de passage de leurs personnages
-    personnagesTries.forEach((role) => {
-      if (role.personnage.getVivant()) {
-        this.gainPassif(role.joueur, role.personnage);
-        this.actionArgentOuPioche(role.joueur);
-        this.actionPersonnage(role.joueur, role.personnage);
-        this.actionConstruire(role.joueur);
+    personnagesTries.forEach((personnage) => {
+      const joueur = personnage.getJoueur();
+      if (!joueur) return;
+      
+      if (personnage.getVivant()) {
+        this.gainPassif(joueur, personnage);
+        this.actionArgentOuPioche(joueur);
+        this.actionPersonnage(joueur, personnage);
+        this.actionConstruire(joueur);
       }
     });
   }
 
   private phaseFinDeTour(): void {
-    this.joueurs.forEach(joueur => {
-      const personnagesRendus = joueur.rendrePersonnages(); // Reprise de tous les personnages choisis par les joueurs
-      this.personnages.push(...personnagesRendus);
-    });
-
-    this.personnages.push(...this.cartesVisibles); // Reprise de tous les personnages visibles
-    this.cartesVisibles.length = 0;
-
-    this.personnages.push(...this.cartesMasquees); // Reprise de tous les personnages masqués
-    this.cartesMasquees.length = 0;
-
-    this.personnages.forEach(personnage => personnage.setVivant(true));
-
-    this.nombreTour++
+    this.personnages.reinitialiserCartesJouables();
   }
 
   /* Fonction utilitaires */
@@ -136,20 +125,8 @@ class Partie {
     return indexAvecCouronne;
   }
 
-  private getPersonnagesTries(): Array<{ joueur: iJoueur, personnage: iPersonnage }> {
-    // Créer une liste de tous les personnages avec une référence à leur joueur
-    const personnagesAvecJoueur = new Array<{ joueur: iJoueur, personnage: iPersonnage }>();
-
-    this.joueurs.forEach(joueur => {
-      joueur.getPersonnages().map((personnage: iPersonnage) => {
-        personnagesAvecJoueur.push({ joueur, personnage });
-      });
-    });
-  
-    return personnagesAvecJoueur.sort((a, b) => a.personnage.getOrdre() - b.personnage.getOrdre()); // Trier les personnages par leur ordre de passage
-  }
-
   private gainPassif(joueur: iJoueur, personnage: iPersonnage) : void {
+    
     joueur.getBatimentsPoses().map((batiment: iBatiment) => {
       if (batiment.getClan() === personnage.getClan()) {
         joueur.variationArgent(this.regles.getDebutTour().argent);
@@ -183,7 +160,7 @@ class Partie {
   }
 
   private actionPersonnage(joueur: iJoueur, personnage: iPersonnage) : void {
-    personnage.action(joueur, this.joueurs, this.pioche);
+    personnage.action(this.personnages.getCartesTous(), this.pioche);
   }
 
   private actionConstruire(joueur: iJoueur) {

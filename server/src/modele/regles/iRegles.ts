@@ -1,5 +1,5 @@
 import iJoueur from "../joueurs/iJoueur";
-import iPersonnage from "../personnages/iPersonnage";
+import PilePersonnage from "../personnages/PilePersonnage";
 
 export type Init = {
   readonly argent: number;
@@ -20,13 +20,7 @@ export type DebutTour = {
 };
 
 interface iRegles {
-  distribution (
-    indexPremierJoueur: number, 
-    joueurs: Array<iJoueur>, 
-    personnages: Array<iPersonnage>, 
-    cartesVisibles: Array<iPersonnage>, 
-    cartesMasquees: Array<iPersonnage>
-  ) : void;
+  distribution (indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: PilePersonnage ) : void;
   
   getInit(): Init;
   getCartesEcartees() : CartesEcartees;

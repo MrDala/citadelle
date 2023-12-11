@@ -5,6 +5,7 @@ import iBatiment from "../batiments/iBatiments";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
 import iRegles, { CartesEcartees, DebutTour, Init } from "./iRegles";
+import PilePersonnage from "../personnages/PilePersonnage";
 
 abstract class aRegles implements iRegles {
   private init: Init;
@@ -47,24 +48,18 @@ abstract class aRegles implements iRegles {
     return this.debutTour;
   }
 
-  public distribution(
-    indexPremierJoueur: number,
-    joueurs: Array<iJoueur>,
-    personnages: Array<iPersonnage>,
-    cartesVisibles: Array<iPersonnage>,
-    cartesMasquees: Array<iPersonnage>
-  ) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: PilePersonnage) {
+    let cartesJouables = personnages.getCartesChoisissables();
+
     // Retrait des cartes VISIBLES
     for (let i = 0; i < this.cartesEcartees.visibles; i++) {
       let carte: iPersonnage | null = null;
 
       while (!carte || carte instanceof Roi) {
         try {
-          carte = personnages.shift()!;
-          if (carte instanceof Roi) {   // Remise dans la pile si le ROI est la carte masquée 
-            personnages.push(carte);
-          } else {                      // Retrait de la carte
-            cartesMasquees.push(carte);
+          carte = cartesJouables[Math.floor(Math.random() * cartesJouables.length)];
+          if (carte !instanceof Roi) { // Remise dans la pile si le ROI est la carte masquée 
+            personnages.setCarteVisible(carte);
           }
         } catch (error) {
           throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
@@ -72,33 +67,46 @@ abstract class aRegles implements iRegles {
       }
     }
 
+    cartesJouables = personnages.getCartesChoisissables();
+
     // Retrait des carte MASQUEES
     for (let i = 0; i < this.cartesEcartees.masqueesAvantDistribution; i++) {
-      if (personnages.length > 0) {
-        cartesVisibles.push(personnages.shift()!);
+      if (cartesJouables.length > 0) {
+        personnages.setCarteMasquee(cartesJouables[i]);
       } else {
         throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
       }
     }
 
+    // Choix des personnages
     for (let i = 0; i < joueurs.length; i++) {
+      // Création d'une liste des personnages non attribués
+      cartesJouables = personnages.getCartesChoisissables();
+
+      // Récupération du joueur devant choisir
       const currentIndex = (indexPremierJoueur + i) % joueurs.length;
       const joueur = joueurs[currentIndex];
-      const personnageChoisi = joueur.choix(personnages)[0];
-      joueur.prendrePersonnages(personnageChoisi);
+
+      // Choix du personnage
+      const personnageChoisi = joueur.choix(cartesJouables)[0];
+      personnageChoisi.setJoueur(joueur);
     }
+
+    cartesJouables = personnages.getCartesChoisissables();
 
     // Retrait des carte MASQUEES
     for (let i = 0; i < this.cartesEcartees.masqueesApresDistribution; i++) {
-      if (personnages.length > 0) {
-        cartesMasquees.push(personnages.shift()!);
+      if (cartesJouables.length > 0) {
+        personnages.setCarteMasquee(cartesJouables[i]);
       } else {
         throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
       }
     }
 
+    cartesJouables = personnages.getCartesChoisissables();
+
     // Contrôle de la bonne distribution
-    if (personnages.length !== 0) {
+    if (cartesJouables.length !== 0) {
       throw new Error(ERREURS.ERREUR_DISTRIBUTION());
     }
   }
