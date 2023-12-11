@@ -1,4 +1,3 @@
-import CustomArray from "../tools/CustomArray";
 import Architecte from "./Architecte";
 import Assassin from "./Assassin";
 import Condottiere from "./Condottiere";
@@ -21,8 +20,8 @@ class FabriquePersonnages {
     CONDOTTIERE: new Condottiere(),
   } as const;
 
-  public static initAll(): CustomArray<iPersonnage> {
-    return new CustomArray<iPersonnage>(...Object.values(FabriquePersonnages.init));
+  public static initAll(): Array<iPersonnage> {
+    return new Array<iPersonnage>(...Object.values(FabriquePersonnages.init));
   }
 }
 

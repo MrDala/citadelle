@@ -1,7 +1,6 @@
 import { UUID } from "crypto";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
-import CustomArray from "../tools/CustomArray";
 import aPersonnage from "./aPersonnage";
 import ERREURS from "../enum/Erreurs";
 import ChoixMagicien from "../enum/ChoixMagicien";
@@ -28,14 +27,20 @@ class Magicien extends aPersonnage {
   }
 
   private echangeAvecPioche(joueur: iJoueur, piocheBatiment: Array<iBatiment>) {
-    const nbChoixMax = piocheBatiment.length < joueur.getBatimentsEnMain().length ? piocheBatiment.length : joueur.getBatimentsEnMain().length;
-    const batimentChoisi = joueur.choix(joueur.getBatimentsEnMain(), nbChoixMax);
-    joueur.getBatimentsEnMain().transfer(piocheBatiment, batimentChoisi);
+    const nbChoixMax = Math.min(piocheBatiment.length, joueur.getBatimentsEnMain().length);
+    const batimentsChoisis = joueur.choix(joueur.getBatimentsEnMain(), nbChoixMax);
+  
+    // Suppression des cartes de la main
+    joueur.setBatimentsEnMain(joueur.getBatimentsEnMain().filter(batiment => !batimentsChoisis.includes(batiment)));
+  
+    // Ajout des cartes choisies dans la pioche
+    piocheBatiment.push(...batimentsChoisis);
   }
+  
 
   private echangeAvecJoueur (joueur: iJoueur, joueurs: Array<iJoueur>) {
     // Détermination des joueurs attaquables
-    let joueursAttaquables = new CustomArray<{id: UUID, pseudo: String, nbBatimentsEnMain: Number}>
+    let joueursAttaquables = new Array<{id: UUID, pseudo: String, nbBatimentsEnMain: Number}>
 
     joueurs.forEach(j => {
       if(j !== joueur) {
@@ -56,8 +61,8 @@ class Magicien extends aPersonnage {
 
     // Echange des cartes
     const tempBatimentsEnMain = joueur.getBatimentsEnMain();
-    joueurChoisi.getBatimentsEnMain().transfer(joueur.getBatimentsEnMain(), joueurChoisi.getBatimentsEnMain());
-    tempBatimentsEnMain.transfer(joueurChoisi.getBatimentsEnMain(), tempBatimentsEnMain);
+    joueur.setBatimentsEnMain(joueurChoisi.getBatimentsEnMain());
+    joueurChoisi.setBatimentsEnMain(tempBatimentsEnMain);
   }
 }
 

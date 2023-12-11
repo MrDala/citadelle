@@ -1,7 +1,6 @@
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 import aRegles from "./aRegles";
 
 class ReglesDeuxJoueurs extends aRegles {
@@ -15,7 +14,7 @@ class ReglesDeuxJoueurs extends aRegles {
     })
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: Array<iPersonnage>, cartesVisibles: Array<iPersonnage>, cartesMasquees: Array<iPersonnage>) {
     const joueurUn = joueurs[indexPremierJoueur];
     const joueurDeux = joueurs[(indexPremierJoueur + 1) % 2];
     let personnageChoisi : iPersonnage;

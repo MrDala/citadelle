@@ -1,7 +1,6 @@
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 import aRegles from "./aRegles";
 
 class ReglesTroisJoueurs extends aRegles {
@@ -15,7 +14,7 @@ class ReglesTroisJoueurs extends aRegles {
     })
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: Array<iPersonnage>, cartesVisibles: Array<iPersonnage>, cartesMasquees: Array<iPersonnage>) {
     // Retrait d'un personnage
     try {
       cartesMasquees.push(personnages.shift()!);
@@ -23,10 +22,13 @@ class ReglesTroisJoueurs extends aRegles {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
 
-    joueurs.customForEach(indexPremierJoueur, joueur => {
-      let personnageChoisi = joueur.choix(personnages)[0]; // Choix du personnage
+    for (let i = 0; i < joueurs.length * 2; i++) {
+      const currentIndex = (indexPremierJoueur + i) % joueurs.length;
+      const joueur = joueurs[currentIndex];
+      const personnageChoisi = joueur.choix(personnages)[0];
       joueur.prendrePersonnages(personnageChoisi);
-    }, 2)
+    }
+    
 
     // Retrait d'un personnage
     try {

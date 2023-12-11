@@ -46,12 +46,13 @@ class JoueurDefaut extends aJoueur {
       }
     })
 
-    let batimentChoisi = null;
+    let batimentChoisi: iBatiment | null = null;
     if (batimentsConstructibles.length > 0) {
       const randomIndex = Math.floor(Math.random() * batimentsConstructibles.length);
       batimentChoisi = batimentsConstructibles.splice(randomIndex, 1)[0];
 
-      this.getBatimentsEnMain().transfer(this.getBatimentsPoses(), batimentChoisi);
+      this.getBatimentsPoses().push(batimentChoisi);
+      this.setBatimentsEnMain(this.getBatimentsEnMain().filter(batiment => batiment !== batimentChoisi));
 
       this.variationArgent(-batimentChoisi.getCout());
     }

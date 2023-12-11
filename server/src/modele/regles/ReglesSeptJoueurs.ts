@@ -1,7 +1,6 @@
 import ERREURS from "../enum/Erreurs";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 import aRegles from "./aRegles";
 
 class ReglesSeptJoueurs extends aRegles {
@@ -15,18 +14,20 @@ class ReglesSeptJoueurs extends aRegles {
     })
   }
 
-  public distribution(indexPremierJoueur: number, joueurs: CustomArray<iJoueur>, personnages: CustomArray<iPersonnage>, cartesVisibles: CustomArray<iPersonnage>, cartesMasquees: CustomArray<iPersonnage>) {
+  public distribution(indexPremierJoueur: number, joueurs: Array<iJoueur>, personnages: Array<iPersonnage>, cartesVisibles: Array<iPersonnage>, cartesMasquees: Array<iPersonnage>) {
     // Retrait d'une carte MASQUEE
     if (personnages.length === 0) {
       throw new Error(ERREURS.ERREUR_CARTE_MANQUANTE());
     }
     cartesMasquees.push(personnages.shift()!);
 
-    // Choix d'un personnage pour chaque joueur SAUF le dernier
-    joueurs.forEachInRange(indexPremierJoueur, indexPremierJoueur-2, (joueur) => {
-      let personnageChoisi = joueur.choix(personnages)[0]; // Choix du personnage
+    for(let i=0; i < joueurs.length - 1; i++){
+      let currentIndex = (indexPremierJoueur + i) % joueurs.length;
+      const joueur = joueurs[currentIndex];
+
+      let personnageChoisi = joueur.choix(personnages)[0];
       joueur.prendrePersonnages(personnageChoisi);
-    })
+    }
 
     // Ajout de la carte masquée dans la liste des cartes à personnages
     personnages.push(cartesMasquees.shift()!);
@@ -49,5 +50,6 @@ class ReglesSeptJoueurs extends aRegles {
     }
   }
 }
+
 
 export default ReglesSeptJoueurs;

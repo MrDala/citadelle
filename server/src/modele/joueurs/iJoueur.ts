@@ -1,7 +1,6 @@
 import { UUID } from "crypto";
 import iPersonnage from "../personnages/iPersonnage";
 import iBatiment from "../batiments/iBatiments";
-import CustomArray from "../tools/CustomArray";
 
 interface iJoueur {
   // Getter
@@ -9,12 +8,14 @@ interface iJoueur {
   getPseudo(): string;
   getCouronne(): boolean;
   getPersonnages(): Array<iPersonnage>;
-  getBatimentsEnMain(): CustomArray<iBatiment>;
-  getBatimentsPoses(): CustomArray<iBatiment>;
+  getBatimentsEnMain(): Array<iBatiment>;
+  getBatimentsPoses(): Array<iBatiment>;
   getArgent(): number;
 
   // Setter
   setCouronne(bool: Boolean): void;
+  setBatimentsEnMain(batiments: Array<iBatiment>): void;
+  setBatimentsPoses(batiments: Array<iBatiment>): void;
   addBatimentsEnMain(batiments: iBatiment | Array<iBatiment>): void;
   variationArgent(montant: number): void;
 

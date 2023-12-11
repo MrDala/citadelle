@@ -1,7 +1,6 @@
 import iBatiment from "../batiments/iBatiments";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
-import CustomArray from "../tools/CustomArray";
 import iPersonnage from "./iPersonnage";
 
 abstract class aPersonnage implements iPersonnage {
@@ -17,7 +16,7 @@ abstract class aPersonnage implements iPersonnage {
     this.vivant = true;
   }
   
-  abstract action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<iBatiment>): void;
+  abstract action(joueur: iJoueur, joueurs: Array<iJoueur>, piocheBatiment: Array<iBatiment>): void;
 
   public getNom(): string {
     return this.nom;

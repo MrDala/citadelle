@@ -1,7 +1,6 @@
 import Batiment from "../batiments/Batiment";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
-import CustomArray from "../tools/CustomArray";
 import aPersonnage from "./aPersonnage";
 
 class Roi extends aPersonnage {
@@ -9,8 +8,9 @@ class Roi extends aPersonnage {
     super("Roi", Clan.NOBLE, 4)
   }
 
-  public action(joueur: iJoueur, joueurs: CustomArray<iJoueur>, piocheBatiment: CustomArray<Batiment>) {
+  public action(joueur: iJoueur, joueurs: Array<iJoueur>, piocheBatiment: Array<Batiment>) {
     let joueurCouronne = joueurs.find(j => j.getCouronne());
+    
     if (joueurCouronne){
       joueurCouronne.setCouronne(false);
     }

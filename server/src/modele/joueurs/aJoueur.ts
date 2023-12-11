@@ -1,7 +1,5 @@
 import { UUID, randomUUID } from "crypto";
-import Batiment from "../batiments/Batiment";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 import iJoueur from "./iJoueur";
 import iBatiment from "../batiments/iBatiments";
 
@@ -9,18 +7,18 @@ abstract class aJoueur implements iJoueur {
   private readonly id: UUID;
   private readonly pseudo: string;
   private couronne: boolean;
-  private personnages: CustomArray<iPersonnage>;
-  private batimentsEnMain: CustomArray<iBatiment>;
-  private batimentsPoses: CustomArray<iBatiment>;
+  private personnages: Array<iPersonnage>;
+  private batimentsEnMain: Array<iBatiment>;
+  private batimentsPoses: Array<iBatiment>;
   private argent: number;
 
   constructor(pseudo: string) {
     this.id = randomUUID()    ;
     this.pseudo = pseudo;
     this.couronne = false;
-    this.personnages = new CustomArray<iPersonnage>();
-    this.batimentsEnMain = new CustomArray<iBatiment>();
-    this.batimentsPoses = new CustomArray<iBatiment>();
+    this.personnages = new Array<iPersonnage>();
+    this.batimentsEnMain = new Array<iBatiment>();
+    this.batimentsPoses = new Array<iBatiment>();
     this.argent = 0;
   }
   
@@ -30,57 +28,64 @@ abstract class aJoueur implements iJoueur {
   abstract choix<T>(liste: Array<T>, nbChoixMax?: number): Array<T>;
 
   /* Getter */
-  getId(): UUID {
+  public getId(): UUID {
     return this.id;
   }
-  getPseudo(): string {
+  public getPseudo(): string {
     return this.pseudo;
   }
-  getCouronne(): boolean {
+  public getCouronne(): boolean {
     return this.couronne;
   }
-  getPersonnages(): CustomArray<iPersonnage> {
+  public getPersonnages(): Array<iPersonnage> {
     return this.personnages;
   }
-  getBatimentsEnMain(): CustomArray<iBatiment> {
+  public getBatimentsEnMain(): Array<iBatiment> {
     return this.batimentsEnMain;
   }
-  getBatimentsPoses(): CustomArray<iBatiment> {
+  public getBatimentsPoses(): Array<iBatiment> {
     return this.batimentsPoses;
   }
-  getArgent(): number {
+  public getArgent(): number {
     return this.argent;
   }
 
   /* Setter */
-  setCouronne(bool: boolean): void {
+  public setCouronne(bool: boolean): void {
     this.couronne = bool ;
+  }
+  public setBatimentsEnMain(batiments: Array<iBatiment>): void {
+    this.batimentsEnMain = batiments;
+  }
+  public setBatimentsPoses(batiments: Array<iBatiment>): void {
+    this.batimentsPoses = batiments;
   }
 
   /* Interractions */
-  addBatimentsEnMain(batiments: iBatiment | CustomArray<iBatiment>): void {
-    if (batiments instanceof CustomArray) {
+  public addBatimentsEnMain(batiments: iBatiment | Array<iBatiment>): void {
+    if (batiments instanceof Array) {
       this.batimentsEnMain.push(...batiments);
     } else {
       this.batimentsEnMain.push(batiments);
     }
   }
 
-  variationArgent(montant: number) {
+  public variationArgent(montant: number) {
     this.argent += montant;
   }
 
-  prendrePersonnages(personnages: iPersonnage | CustomArray<iPersonnage>): void {
-    if (personnages instanceof CustomArray) {
+  public prendrePersonnages(personnages: iPersonnage | Array<iPersonnage>): void {
+    if (personnages instanceof Array) {
       this.personnages.push(...personnages);
     } else {
       this.personnages.push(personnages);
     }
   }
 
-  rendrePersonnages(): Array<iPersonnage> {
+  public rendrePersonnages(): Array<iPersonnage> {
     var personnagesRendus = new Array<iPersonnage>();
-    this.personnages.transferAll(personnagesRendus);
+    personnagesRendus.push(...this.personnages);
+    this.personnages.length = 0;
 
     return personnagesRendus;
   }

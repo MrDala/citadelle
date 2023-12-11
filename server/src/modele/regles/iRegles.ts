@@ -1,6 +1,5 @@
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 
 export type Init = {
   readonly argent: number;
@@ -23,17 +22,17 @@ export type DebutTour = {
 interface iRegles {
   distribution (
     indexPremierJoueur: number, 
-    joueurs: CustomArray<iJoueur>, 
-    personnages: CustomArray<iPersonnage>, 
-    cartesVisibles: CustomArray<iPersonnage>, 
-    cartesMasquees: CustomArray<iPersonnage>
+    joueurs: Array<iJoueur>, 
+    personnages: Array<iPersonnage>, 
+    cartesVisibles: Array<iPersonnage>, 
+    cartesMasquees: Array<iPersonnage>
   ) : void;
   
   getInit(): Init;
   getCartesEcartees() : CartesEcartees;
   getDebutTour(): DebutTour;
 
-  isPartieTerminee (joueurs: CustomArray<iJoueur>) : boolean;
+  isPartieTerminee (joueurs: Array<iJoueur>) : boolean;
   calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur) : number;
 }
 

@@ -28,19 +28,19 @@ class Batiment implements iBatiment{
     this.effet = batiment.effet ?? null;
   }
 
-  getNom(): string {
+  public getNom(): string {
     return this.nom;
   }
-  getCout(): number {
+  public getCout(): number {
     return this.cout;
   }
-  getValeur(): number {
+  public getValeur(): number {
     return this.valeur;
   }
-  getClan(): Clan {
+  public getClan(): Clan {
     return this.clan;
   }
-  getEffet(): Effet | null {
+  public getEffet(): Effet | null {
     return this.effet;
   }
 

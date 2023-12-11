@@ -1,13 +1,12 @@
 import express from 'express';
 import Partie from './modele/Partie';
-import CustomArray from './modele/tools/CustomArray';
 import iJoueur from './modele/joueurs/iJoueur';
 import JoueurDefaut from './modele/joueurs/JoueurDefaut';
 
 const app = express();
 const port = 3000;
 
-const joueurs = new CustomArray<iJoueur>
+const joueurs = new Array<iJoueur>
 joueurs.push(new JoueurDefaut("Alex"));
 joueurs.push(new JoueurDefaut("Nico"));
 joueurs.push(new JoueurDefaut("Manon"));

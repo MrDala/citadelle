@@ -1,9 +1,9 @@
 import Clan from "../enum/Clan";
 import ERREURS from "../enum/Erreurs";
-import iJoueur from "../joueurs/iJoueur";
 import Roi from "../personnages/Roi";
+import iBatiment from "../batiments/iBatiments";
+import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
-import CustomArray from "../tools/CustomArray";
 import iRegles, { CartesEcartees, DebutTour, Init } from "./iRegles";
 
 abstract class aRegles implements iRegles {
@@ -49,10 +49,10 @@ abstract class aRegles implements iRegles {
 
   public distribution(
     indexPremierJoueur: number,
-    joueurs: CustomArray<iJoueur>,
-    personnages: CustomArray<iPersonnage>,
-    cartesVisibles: CustomArray<iPersonnage>,
-    cartesMasquees: CustomArray<iPersonnage>
+    joueurs: Array<iJoueur>,
+    personnages: Array<iPersonnage>,
+    cartesVisibles: Array<iPersonnage>,
+    cartesMasquees: Array<iPersonnage>
   ) {
     // Retrait des cartes VISIBLES
     for (let i = 0; i < this.cartesEcartees.visibles; i++) {
@@ -81,11 +81,12 @@ abstract class aRegles implements iRegles {
       }
     }
 
-    // Choix du rôle par les joueurs
-    joueurs.customForEach(indexPremierJoueur, joueur => {
-      let personnageChoisi = joueur.choix(personnages)[0];
+    for (let i = 0; i < joueurs.length; i++) {
+      const currentIndex = (indexPremierJoueur + i) % joueurs.length;
+      const joueur = joueurs[currentIndex];
+      const personnageChoisi = joueur.choix(personnages)[0];
       joueur.prendrePersonnages(personnageChoisi);
-    });
+    }
 
     // Retrait des carte MASQUEES
     for (let i = 0; i < this.cartesEcartees.masqueesApresDistribution; i++) {
@@ -102,32 +103,33 @@ abstract class aRegles implements iRegles {
     }
   }
 
-  public isPartieTerminee(joueurs: CustomArray<iJoueur>): boolean {
+  public isPartieTerminee(joueurs: Array<iJoueur>): boolean {
     return joueurs.some(joueur => joueur.getBatimentsPoses().length >= 8);
   }
 
   calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur): number {
     let score = 0;
-
-    joueur.getBatimentsPoses().forEach(batiment => {
+  
+    joueur.getBatimentsPoses().forEach((batiment: iBatiment) => {
       score += batiment.getValeur();
     });
-
-    const clansPossedes = new Set(joueur.getBatimentsPoses().map(batiment => batiment.getClan()));
-    const clansRequis = [Clan.NOBLE, Clan.COMMERCANT, Clan.RELIGIEUX, Clan.MILITAIRE, Clan.MERVEILLE];
-
+  
+    const clansPossedes = new Set(joueur.getBatimentsPoses().map((batiment: iBatiment) => batiment.getClan()));
+    const clansRequis: Array<Clan> = [Clan.NOBLE, Clan.COMMERCANT, Clan.RELIGIEUX, Clan.MILITAIRE, Clan.MERVEILLE];
+  
     if (clansRequis.every(clan => clansPossedes.has(clan))) {
       score += 3;
     }
-
+  
     if (joueur === premierHuitBatiments) {
       score += 4;
     } else if (joueur.getBatimentsPoses().length >= 8) {
       score += 2;
     }
-
+  
     return score;
   }
+  
 }
 
 export default aRegles;
