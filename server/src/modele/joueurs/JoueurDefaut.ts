@@ -9,9 +9,7 @@ class JoueurDefaut extends aJoueur {
     if (nbChoixMax <= 0 || nbChoixMax > liste.length) {
       throw new Error(ERREURS.ERREUR_CHOIX(liste));
     }
-
     const result: Array<T> = [];
-
     const nbChoix = Math.floor(Math.random() * nbChoixMax) + 1;
 
     while (result.length < nbChoix) {

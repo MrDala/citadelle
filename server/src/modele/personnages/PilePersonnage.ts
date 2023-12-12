@@ -56,6 +56,7 @@ class PilePersonnage {
   
     // Ajout des cartes
     this.cartesJouables = [...this.cartesMasquees, ...this.cartesVisibles, ...cartesJouees];
+    this.cartesJouables.forEach(carte => carte.setVivant(true));
     
     // Réinitialisation des autres piles
     this.cartesChoisies.length = 0;

@@ -40,9 +40,6 @@ class Partie {
     console.log("DEBUT DE LA PARTIE");
     this.initPartie();
     do {
-      console.log("DEBUT DU TOUR n°" + this.nombreTour);
-      console.log(this.joueurs);
-      console.log(this.pioche);
       this.tourDeJeu();
     } while (!this.regles.isPartieTerminee(this.joueurs));
 
@@ -73,20 +70,6 @@ class Partie {
     this.phaseChoixDuRole();
     this.phaseAction();
     this.phaseFinDeTour();
-  }
-
-  private getClassement(): Array<{ pseudo: string; score: number }> {
-    let classement: Array<{ pseudo: string; score: number }> = [];
-
-    this.joueurs.forEach(joueur => {
-      let score = this.regles.calculScore(joueur, this.premierHuitBatiments!);
-      classement.push({ pseudo: joueur.getPseudo(), score });
-    });
-
-    // Trier le classement selon les scores (en ordre décroissant)
-    classement.sort((a, b) => b.score - a.score);
-
-    return classement;
   }
 
   /* Phase d'un tour de jeu */
@@ -186,6 +169,14 @@ class Partie {
     personnage.action(joueur, this.joueurs, this.personnages.getCartesChoisies(), this.personnages.getCartesTous(), this.pioche);
   }
 
+  private actionConstruire(joueur: iJoueur) {
+    joueur.construireBatiment();
+
+    if (joueur.getBatimentsPoses().length >= 8 && !this.premierHuitBatiments) {
+      this.premierHuitBatiments = joueur;
+    }
+  }
+
   private gainPassif(joueur: iJoueur, personnage: iPersonnage): void {
     joueur.getBatimentsPoses().map((batiment: iBatiment) => {
       if (batiment.getClan() === personnage.getClan()) {
@@ -194,12 +185,18 @@ class Partie {
     })
   }
 
-  private actionConstruire(joueur: iJoueur) {
-    joueur.construireBatiment();
+  private getClassement(): Array<{ pseudo: string; score: number }> {
+    let classement: Array<{ pseudo: string; score: number }> = [];
 
-    if (joueur.getBatimentsPoses().length >= 8 && !this.premierHuitBatiments) {
-      this.premierHuitBatiments = joueur;
-    }
+    this.joueurs.forEach(joueur => {
+      let score = this.regles.calculScore(joueur, this.premierHuitBatiments!);
+      classement.push({ pseudo: joueur.getPseudo(), score });
+    });
+
+    // Trier le classement selon les scores (en ordre décroissant)
+    classement.sort((a, b) => b.score - a.score);
+
+    return classement;
   }
 
 }
