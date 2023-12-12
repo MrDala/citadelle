@@ -9,6 +9,8 @@ import iPersonnage from "./personnages/iPersonnage";
 import iRegles from "./regles/iRegles";
 import iBatiment from "./batiments/iBatiments";
 import PilePersonnage from "./personnages/PilePersonnage";
+import ChoixPioche from "./enum/ChoixPioche";
+import PersonnagePossede from "./personnages/PersonnagePossede";
 
 class Partie {
   private regles: iRegles;
@@ -36,14 +38,16 @@ class Partie {
 
   public jouer(): void {
     console.log("DEBUT DE LA PARTIE");
-    console.log(this.nombreTour);
     this.initPartie();
     do {
+      console.log("DEBUT DU TOUR n°" + this.nombreTour);
+      console.log(this.joueurs);
+      console.log(this.pioche);
       this.tourDeJeu();
     } while (!this.regles.isPartieTerminee(this.joueurs));
-  
+
     let classement = this.getClassement();
-  
+
     console.log("Nombre de tour joués : " + this.nombreTour + "\n");
     console.log(classement);
     console.log("\nFIN DE LA PARTIE");
@@ -73,15 +77,15 @@ class Partie {
 
   private getClassement(): Array<{ pseudo: string; score: number }> {
     let classement: Array<{ pseudo: string; score: number }> = [];
-  
+
     this.joueurs.forEach(joueur => {
       let score = this.regles.calculScore(joueur, this.premierHuitBatiments!);
       classement.push({ pseudo: joueur.getPseudo(), score });
     });
-  
+
     // Trier le classement selon les scores (en ordre décroissant)
     classement.sort((a, b) => b.score - a.score);
-  
+
     return classement;
   }
 
@@ -94,21 +98,42 @@ class Partie {
   }
 
   private phaseAction(): void {
-    const personnagesJouables = this.personnages.getCartesTous();
-    const personnagesTries = personnagesJouables.sort((a, b) => a.getOrdre() - b.getOrdre());
+    const personnagesChoisis = this.personnages.getCartesChoisies();
+    const personnagesTries = personnagesChoisis.sort((a, b) => a.getCarte().getOrdre() - b.getCarte().getOrdre());
 
     // Appeler chaque joueur dans l'ordre de passage de leurs personnages
-    personnagesTries.forEach((personnage) => {
-      const joueur = personnage.getJoueur();
-      if (!joueur) return;
-      
-      if (personnage.getVivant()) {
-        this.gainPassif(joueur, personnage);
-        this.actionArgentOuPioche(joueur);
-        this.actionPersonnage(joueur, personnage);
-        this.actionConstruire(joueur);
+    personnagesTries.forEach((carteChoisie) => {
+      if (carteChoisie.getCarte().getVivant()) {
+        this.actionParPersonnage(carteChoisie);
       }
     });
+  }
+
+  private actionParPersonnage(carteChoisie: PersonnagePossede): void {
+    const joueur = carteChoisie.getJoueur();
+    const personnage = carteChoisie.getCarte();
+    let actionsDipos = Object.values(ChoixAction);
+    let choix: ChoixAction;
+
+    do {
+      // Choix de l'action réalisée par le joueur
+      choix = joueur.choix(actionsDipos)[0];
+
+      switch (choix) {
+        case ChoixAction.PIOCHE:
+          this.actionArgentOuPioche(joueur);
+          break;
+        case ChoixAction.EFFET_PERSONNAGE:
+          this.actionPersonnage(joueur, personnage);
+          break;
+        case ChoixAction.CONSTRUIRE:
+          this.actionConstruire(joueur);
+          break;
+      }
+
+      //Retrait de l'action choisie
+      actionsDipos = actionsDipos.filter(action => action !== choix);
+    } while (choix !== ChoixAction.FIN_TOUR && actionsDipos.length > 0);
   }
 
   private phaseFinDeTour(): void {
@@ -125,42 +150,48 @@ class Partie {
     return indexAvecCouronne;
   }
 
-  private gainPassif(joueur: iJoueur, personnage: iPersonnage) : void {
-    
-    joueur.getBatimentsPoses().map((batiment: iBatiment) => {
-      if (batiment.getClan() === personnage.getClan()) {
-        joueur.variationArgent(this.regles.getDebutTour().argent);
-      }
-    })
-  }
-
   private actionArgentOuPioche(joueur: iJoueur): number | Array<iBatiment> {
-    const action = joueur.choix(Object.values(ChoixAction))[0];
+    const action = joueur.choix(Object.values(ChoixPioche))[0];
 
     switch (action) {
-      case ChoixAction.ARGENT:
+      // Choix de recevoir de l'argent
+      case ChoixPioche.ARGENT:
         joueur.variationArgent(this.regles.getDebutTour().argent);
         break;
-      case ChoixAction.PIOCHE:
+      // Choix de piocher des cartes batiments
+      case ChoixPioche.CARTE:
+        // Pioche d'un certain nombre de cartes
         const cartes = new Array<iBatiment>;
-        for (let i=0; i < this.regles.getDebutTour().nbBatimentsPioches; i++) {
+
+        for (let i = 0; i < this.regles.getDebutTour().nbBatimentsPioches; i++) {
           let carte;
           carte = this.pioche.shift();
-          
+
           if (carte) {
             cartes.push(carte);
           }
         }
 
         if (cartes.length > 0) {
-          this.pioche.push(...joueur.choixCarteBatiment(cartes, this.regles.getDebutTour().nbBatimentGardes));
+          // Choix de la(les) carte gardée par le joueur
+          const cartesNonChoisies = joueur.choixCarteBatiment(cartes, this.regles.getDebutTour().nbBatimentGardes);
+          this.pioche.push(...cartesNonChoisies);
         }
     }
     return 0;
   }
 
-  private actionPersonnage(joueur: iJoueur, personnage: iPersonnage) : void {
-    personnage.action(this.personnages.getCartesTous(), this.pioche);
+  private actionPersonnage(joueur: iJoueur, personnage: iPersonnage): void {
+    this.gainPassif(joueur, personnage);
+    personnage.action(joueur, this.joueurs, this.personnages.getCartesChoisies(), this.personnages.getCartesTous(), this.pioche);
+  }
+
+  private gainPassif(joueur: iJoueur, personnage: iPersonnage): void {
+    joueur.getBatimentsPoses().map((batiment: iBatiment) => {
+      if (batiment.getClan() === personnage.getClan()) {
+        joueur.variationArgent(this.regles.getDebutTour().argent);
+      }
+    })
   }
 
   private actionConstruire(joueur: iJoueur) {

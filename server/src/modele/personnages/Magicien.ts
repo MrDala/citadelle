@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
 import aPersonnage from "./aPersonnage";
@@ -6,21 +5,23 @@ import ERREURS from "../enum/Erreurs";
 import ChoixMagicien from "../enum/ChoixMagicien";
 import iBatiment from "../batiments/iBatiments";
 import iPersonnage from "./iPersonnage";
+import PersonnagePossede from "./PersonnagePossede";
+import { UUID } from "crypto";
 
 class Magicien extends aPersonnage {
   public constructor() {
     super("Magicien", Clan.NEUTRE, 3)
   }
 
-  public action(personnages: Array<iPersonnage>, piocheBatiment: Array<iBatiment>) {
-    const joueur = this.getJoueur();
-    if (!joueur) return;
-    
+  public action(
+    joueur: iJoueur, 
+    joueurs: Array<iJoueur>,
+    personnagesPossedes: Array<PersonnagePossede>, 
+    personnagesAttaquables: ReadonlyArray<iPersonnage>, 
+    piocheBatiment: Array<iBatiment>
+  ): void {    
     const actionsPossibles = Object.values(ChoixMagicien);
     const actionChoisie = piocheBatiment.length !== 0 && joueur.getBatimentsEnMain().length !== 0 ? joueur.choix(actionsPossibles)[0] : ChoixMagicien.VOL_JOUEUR;
-    const joueurs = personnages
-    .map(personnage => personnage.getJoueur())
-    .filter((joueur): joueur is iJoueur => joueur !== null);
   
     switch (actionChoisie) {
       case ChoixMagicien.ECHANGE_PIOCHE:

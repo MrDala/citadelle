@@ -34,7 +34,7 @@ class ReglesSeptJoueurs extends aRegles {
       cartes = personnages.getCartesChoisissables();
 
       const personnageChoisi = joueur.choix(cartes)[0];
-      personnageChoisi.setJoueur(joueur);
+      personnages.choisirPersonnage(personnageChoisi, joueur);
     }
 
     // Ajout de la carte masquée dans la liste des cartes à personnages
@@ -52,7 +52,7 @@ class ReglesSeptJoueurs extends aRegles {
     // Choix du personnage
     cartes = personnages.getCartesChoisissables();
     const personnageChoisi = dernierJoueur.choix(cartes)[0]; // Choix du personnage
-    personnageChoisi.setJoueur(dernierJoueur);
+    personnages.choisirPersonnage(personnageChoisi, dernierJoueur);
   }
 }
 

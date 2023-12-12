@@ -36,30 +36,6 @@ class JoueurDefaut extends aJoueur {
 
     return cartes;
   }
-
-  public construireBatiment(): iBatiment | null {
-    const batimentsConstructibles = new Array<iBatiment>;
-
-    this.getBatimentsEnMain().forEach(batiment => {
-      if (this.getArgent() >= batiment.getCout()) {
-        batimentsConstructibles.push(batiment);
-      }
-    })
-
-    let batimentChoisi: iBatiment | null = null;
-    if (batimentsConstructibles.length > 0) {
-      const randomIndex = Math.floor(Math.random() * batimentsConstructibles.length);
-      batimentChoisi = batimentsConstructibles.splice(randomIndex, 1)[0];
-
-      this.getBatimentsPoses().push(batimentChoisi);
-      this.setBatimentsEnMain(this.getBatimentsEnMain().filter(batiment => batiment !== batimentChoisi));
-
-      this.variationArgent(-batimentChoisi.getCout());
-    }
-
-    return batimentChoisi;
-  }
-
 }
 
 export default JoueurDefaut;

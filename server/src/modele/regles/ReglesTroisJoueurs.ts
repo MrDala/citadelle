@@ -35,7 +35,7 @@ class ReglesTroisJoueurs extends aRegles {
 
       // Choix du personnage
       const personnageChoisi = joueur.choix(cartes)[0];
-      personnageChoisi.setJoueur(joueur);
+      personnages.choisirPersonnage(personnageChoisi, joueur);
     }
     
 

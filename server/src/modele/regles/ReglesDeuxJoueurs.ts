@@ -32,13 +32,13 @@ class ReglesDeuxJoueurs extends aRegles {
     cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
     carteChoisie = joueurUn.choix(cartes)[0]; // Choix du personnage
-    carteChoisie.setJoueur(joueurUn);
+    personnages.choisirPersonnage(carteChoisie, joueurUn);
 
     for(let i = 1; i >= 0; i--) {
       cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
       carteChoisie = joueurs[i].choix(cartes)[0]; // Choix du personnage
-      carteChoisie.setJoueur(joueurs[i]);
+      personnages.choisirPersonnage(carteChoisie, joueurs[i]);
   
       cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
   
@@ -50,8 +50,7 @@ class ReglesDeuxJoueurs extends aRegles {
     cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
     carteChoisie = joueurDeux.choix(cartes)[0]; // Choix du personnage
-    carteChoisie.setJoueur(joueurDeux);
-
+    personnages.choisirPersonnage(carteChoisie, joueurDeux);
 
     // Retrait d'un personnage
     cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables

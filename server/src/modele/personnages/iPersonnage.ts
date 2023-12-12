@@ -1,18 +1,23 @@
 import iBatiment from "../batiments/iBatiments";
 import Clan from "../enum/Clan";
 import iJoueur from "../joueurs/iJoueur";
+import PersonnagePossede from "./PersonnagePossede";
 
 interface iPersonnage {
-  action(personnages: Array<iPersonnage>, piocheBatiment: Array<iBatiment>): void;
-  
+  action(
+    joueur: iJoueur, 
+    joueurs: Array<iJoueur>,
+    personnagesPossedes: Array<PersonnagePossede>,
+    personnagesAttaquables: ReadonlyArray<iPersonnage>, 
+    piocheBatiment: Array<iBatiment>
+  ): void;
+
   getNom(): string;
   getClan(): Clan;
   getOrdre(): number;
   getVivant(): boolean;
-  getJoueur(): iJoueur | null;
 
   setVivant(vivant: boolean): void;
-  setJoueur(joueur : iJoueur | null): void;
 }
 
 export default iPersonnage;

@@ -89,7 +89,7 @@ abstract class aRegles implements iRegles {
 
       // Choix du personnage
       const personnageChoisi = joueur.choix(cartesJouables)[0];
-      personnageChoisi.setJoueur(joueur);
+      personnages.choisirPersonnage(personnageChoisi, joueur);
     }
 
     cartesJouables = personnages.getCartesChoisissables();
@@ -115,7 +115,7 @@ abstract class aRegles implements iRegles {
     return joueurs.some(joueur => joueur.getBatimentsPoses().length >= 8);
   }
 
-  calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur): number {
+  public calculScore(joueur: iJoueur, premierHuitBatiments: iJoueur): number {
     let score = 0;
   
     joueur.getBatimentsPoses().forEach((batiment: iBatiment) => {

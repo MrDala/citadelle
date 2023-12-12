@@ -13,7 +13,7 @@ abstract class aJoueur implements iJoueur {
   private argent: number;
 
   constructor(pseudo: string) {
-    this.id = randomUUID()    ;
+    this.id = randomUUID();
     this.pseudo = pseudo;
     this.couronne = false;
     this.personnages = new Array<iPersonnage>();
@@ -21,10 +21,9 @@ abstract class aJoueur implements iJoueur {
     this.batimentsPoses = new Array<iBatiment>();
     this.argent = 0;
   }
-  
+
   /* Fonction à implémenter dans les classes enfants */
   abstract choixCarteBatiment(cartes: Array<iBatiment>, nbBatimentsGardes: number): Array<iBatiment>;
-  abstract construireBatiment(): iBatiment | null;
   abstract choix<T>(liste: Array<T>, nbChoixMax?: number): Array<T>;
 
   /* Getter */
@@ -49,7 +48,7 @@ abstract class aJoueur implements iJoueur {
 
   /* Setter */
   public setCouronne(bool: boolean): void {
-    this.couronne = bool ;
+    this.couronne = bool;
   }
   public setBatimentsEnMain(batiments: Array<iBatiment>): void {
     this.batimentsEnMain = batiments;
@@ -69,6 +68,25 @@ abstract class aJoueur implements iJoueur {
 
   public variationArgent(montant: number) {
     this.argent += montant;
+  }
+
+  public construireBatiment(): iBatiment | null {
+    const batimentsConstructibles = this.batimentsEnMain
+      .map(batiment => this.argent >= batiment.getCout() ? batiment : null)
+      .filter(batiment => batiment !== null) as Array<iBatiment>;
+
+    let batimentChoisi: iBatiment | null = null;
+
+    if (batimentsConstructibles.length > 0) {
+      batimentChoisi = this.choix(batimentsConstructibles)[0];
+
+      this.batimentsPoses.push(batimentChoisi);
+      this.batimentsEnMain = this.batimentsEnMain.filter(batiment => batiment !== batimentChoisi);
+
+      this.argent -= batimentChoisi.getCout();
+    }
+
+    return batimentChoisi;
   }
 }
 
