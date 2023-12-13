@@ -2,8 +2,11 @@ import { UUID, randomUUID } from "crypto";
 import iPersonnage from "../personnages/iPersonnage";
 import iJoueur from "./iJoueur";
 import iBatiment from "../batiments/iBatiment";
+import EventBus from "../evenements/EventBus";
+import TypeChoix from "../enum/TypeChoix";
 
 abstract class aJoueur implements iJoueur {
+  private readonly eventBus: EventBus;
   private readonly id: UUID;
   private readonly pseudo: string;
   private couronne: boolean;
@@ -13,6 +16,7 @@ abstract class aJoueur implements iJoueur {
   private argent: number;
 
   constructor(pseudo: string) {
+    this.eventBus = EventBus.getInstance();
     this.id = randomUUID();
     this.pseudo = pseudo;
     this.couronne = false;
@@ -24,7 +28,7 @@ abstract class aJoueur implements iJoueur {
 
   /* Fonction à implémenter dans les classes enfants */
   abstract choixCarteBatiment(cartes: Array<iBatiment>, nbBatimentsGardes: number): Array<iBatiment>;
-  abstract choix<T>(liste: Array<T>, nbChoixMax?: number): Array<T>;
+  abstract choix<T>(typeChoix: TypeChoix, liste: Array<T>, nbChoixMax?: number): Array<T>;
 
   /* Getter */
   public getId(): UUID {
@@ -44,6 +48,9 @@ abstract class aJoueur implements iJoueur {
   }
   public getArgent(): number {
     return this.argent;
+  }
+  protected getEventBus(): EventBus {
+    return this.eventBus;
   }
 
   /* Setter */
@@ -78,7 +85,7 @@ abstract class aJoueur implements iJoueur {
     let batimentChoisi: iBatiment | null = null;
 
     if (batimentsConstructibles.length > 0) {
-      batimentChoisi = this.choix(batimentsConstructibles)[0];
+      batimentChoisi = this.choix(TypeChoix.CONSTRUIRE_BATIMENT, batimentsConstructibles)[0];
 
       this.batimentsPoses.push(batimentChoisi);
       this.batimentsEnMain = this.batimentsEnMain.filter(batiment => batiment !== batimentChoisi);

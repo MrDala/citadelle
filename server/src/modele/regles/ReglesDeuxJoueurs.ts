@@ -1,4 +1,5 @@
 import ERREURS from "../enum/Erreurs";
+import TypeChoix from "../enum/TypeChoix";
 import iJoueur from "../joueurs/iJoueur";
 import PilePersonnage from "../personnages/PilePersonnage";
 import iPersonnage from "../personnages/iPersonnage";
@@ -31,25 +32,25 @@ class ReglesDeuxJoueurs extends aRegles {
     // JOUEUR 1
     cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
-    carteChoisie = joueurUn.choix(cartes)[0]; // Choix du personnage
+    carteChoisie = joueurUn.choix(TypeChoix.PERSONNAGE ,cartes)[0]; // Choix du personnage
     personnages.choisirPersonnage(carteChoisie, joueurUn);
 
     for(let i = 1; i >= 0; i--) {
       cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
-      carteChoisie = joueurs[i].choix(cartes)[0]; // Choix du personnage
+      carteChoisie = joueurs[i].choix(TypeChoix.PERSONNAGE, cartes)[0]; // Choix du personnage
       personnages.choisirPersonnage(carteChoisie, joueurs[i]);
   
       cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
   
-      carteChoisie = joueurs[i].choix(cartes)[0]; // Retrait d'un personnage
+      carteChoisie = joueurs[i].choix(TypeChoix.RETRAIT_PERSONNAGE, cartes)[0]; // Retrait d'un personnage
       personnages.setCarteMasquee(carteChoisie);
     }
 
     // JOUEUR 2
     cartes = personnages.getCartesChoisissables(); // Actualisation des cartes jouables
 
-    carteChoisie = joueurDeux.choix(cartes)[0]; // Choix du personnage
+    carteChoisie = joueurDeux.choix(TypeChoix.PERSONNAGE, cartes)[0]; // Choix du personnage
     personnages.choisirPersonnage(carteChoisie, joueurDeux);
 
     // Retrait d'un personnage

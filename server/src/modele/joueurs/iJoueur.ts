@@ -1,6 +1,7 @@
 import { UUID } from "crypto";
 import iPersonnage from "../personnages/iPersonnage";
 import iBatiment from "../batiments/iBatiment";
+import TypeChoix from "../enum/TypeChoix";
 
 interface iJoueur {
   // Getter
@@ -18,7 +19,7 @@ interface iJoueur {
   addBatimentsEnMain(batiments: iBatiment | Array<iBatiment>): void;
   variationArgent(montant: number): void;
 
-  choix<T>(liste: ReadonlyArray<T>, nbChoixMax?: number): Array<T>;
+  choix<T>(typeChoix: TypeChoix,liste: ReadonlyArray<T>, nbChoixMax?: number): Array<T>;
   choixCarteBatiment(cartes: Array<iBatiment>, nbBatimentsGardes: number): Array<iBatiment>
   construireBatiment(): iBatiment | null;
 }

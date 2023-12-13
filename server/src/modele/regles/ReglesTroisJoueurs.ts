@@ -1,4 +1,5 @@
 import ERREURS from "../enum/Erreurs";
+import TypeChoix from "../enum/TypeChoix";
 import iJoueur from "../joueurs/iJoueur";
 import PilePersonnage from "../personnages/PilePersonnage";
 import aRegles from "./aRegles";
@@ -34,7 +35,7 @@ class ReglesTroisJoueurs extends aRegles {
       const joueur = joueurs[currentIndex];
 
       // Choix du personnage
-      const personnageChoisi = joueur.choix(cartes)[0];
+      const personnageChoisi = joueur.choix(TypeChoix.PERSONNAGE, cartes)[0];
       personnages.choisirPersonnage(personnageChoisi, joueur);
     }
     

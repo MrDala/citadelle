@@ -6,6 +6,7 @@ import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
 import iRegles, { CartesEcartees, DebutTour, Init } from "./iRegles";
 import PilePersonnage from "../personnages/PilePersonnage";
+import TypeChoix from "../enum/TypeChoix";
 
 abstract class aRegles implements iRegles {
   private init: Init;
@@ -88,7 +89,7 @@ abstract class aRegles implements iRegles {
       const joueur = joueurs[currentIndex];
 
       // Choix du personnage
-      const personnageChoisi = joueur.choix(cartesJouables)[0];
+      const personnageChoisi = joueur.choix(TypeChoix.PERSONNAGE, cartesJouables)[0];
       personnages.choisirPersonnage(personnageChoisi, joueur);
     }
 

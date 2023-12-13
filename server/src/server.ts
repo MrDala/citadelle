@@ -26,21 +26,22 @@ const eventBus = EventBus.getInstance();
 
 type ObjectType = { [key: string]: any };
 
-function printObjectAttributes(obj: ObjectType, indent: number = 0, parentKey?: string): void {
+function printObjectAttributes(obj: ObjectType, indent: number = 0, parentKey?: string, visitedObjects = new Set<any>()) {
   const blueText = '\x1b[34m'; // Code ANSI pour la couleur bleue
   const resetText = '\x1b[0m'; // Code ANSI pour réinitialiser la couleur
 
   const indentation = ' '.repeat(indent * 3);
 
+  visitedObjects.add(obj);
+
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       const value = obj[key];
 
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === 'object' && value !== null && !(value instanceof EventBus)) {
         // Récursion pour les objets imbriqués
         console.log(`${indentation}${key}: `);
-        printObjectAttributes(value, indent + 1, key);
-        
+        printObjectAttributes(value, indent + 1, key, visitedObjects);
       } else if (value !== undefined) {
         // Afficher l'attribut
         console.log(`${indentation}${key}: ${blueText}${value}${resetText}`);

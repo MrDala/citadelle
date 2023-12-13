@@ -1,5 +1,6 @@
 import iBatiment from "../batiments/iBatiment";
 import Clan from "../enum/Clan";
+import Personnages from "../enum/Personnages";
 import iJoueur from "../joueurs/iJoueur";
 import PersonnagePossede from "./PersonnagePossede";
 import aPersonnage from "./aPersonnage";
@@ -17,7 +18,11 @@ class Marchand extends aPersonnage {
     personnagesAttaquables: ReadonlyArray<iPersonnage>, 
     piocheBatiment: Array<iBatiment>
   ): void {
+    this.getEventBus().emit("DEBUT_EFFET_PERSONNAGE", { personnage: Personnages.MARCHAND });
+
     joueur.variationArgent(1);
+
+    this.getEventBus().emit("FIN_EFFET_PERSONNAGE", {});
   }
 }
 

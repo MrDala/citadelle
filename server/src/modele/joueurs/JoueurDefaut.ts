@@ -1,11 +1,13 @@
-import Batiment from "../batiments/Batiment";
 import iBatiment from "../batiments/iBatiment";
 import ERREURS from "../enum/Erreurs";
+import TypeChoix from "../enum/TypeChoix";
 import aJoueur from "./aJoueur";
 
 class JoueurDefaut extends aJoueur {
 
-  public choix<T>(liste: Array<T>, nbChoixMax: number = 1): Array<T> {
+  public choix<T>(typeChoix: TypeChoix, liste: Array<T>, nbChoixMax: number = 1): Array<T> {
+    this.getEventBus().emit("DEBUT_CHOIX", {TypeChoix: typeChoix});
+
     if (nbChoixMax <= 0 || nbChoixMax > liste.length) {
       throw new Error(ERREURS.ERREUR_CHOIX(liste));
     }
@@ -17,6 +19,7 @@ class JoueurDefaut extends aJoueur {
       result.push(liste.splice(indiceAleatoire, 1)[0]);
     }
 
+    this.getEventBus().emit("FIN_CHOIX", {choix: result});
     return result;
   }
 
@@ -32,6 +35,7 @@ class JoueurDefaut extends aJoueur {
       this.addBatimentsEnMain(carteChoisie);
     }
 
+    this.getEventBus().emit("FIN_CHOIX", {choix: cartes});
     return cartes;
   }
 }

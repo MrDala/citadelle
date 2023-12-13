@@ -7,6 +7,8 @@ import iBatiment from "../batiments/iBatiment";
 import iPersonnage from "./iPersonnage";
 import PersonnagePossede from "./PersonnagePossede";
 import { UUID } from "crypto";
+import TypeChoix from "../enum/TypeChoix";
+import Personnages from "../enum/Personnages";
 
 class Magicien extends aPersonnage {
   public constructor() {
@@ -20,8 +22,10 @@ class Magicien extends aPersonnage {
     personnagesAttaquables: ReadonlyArray<iPersonnage>, 
     piocheBatiment: Array<iBatiment>
   ): void {    
+    this.getEventBus().emit("DEBUT_EFFET_PERSONNAGE", { personnage: Personnages.MAGICIEN });
+
     const actionsPossibles = Object.values(ChoixMagicien);
-    const actionChoisie = piocheBatiment.length !== 0 && joueur.getBatimentsEnMain().length !== 0 ? joueur.choix(actionsPossibles)[0] : ChoixMagicien.VOL_JOUEUR;
+    const actionChoisie = piocheBatiment.length !== 0 && joueur.getBatimentsEnMain().length !== 0 ? joueur.choix(TypeChoix.CIBLE_MAGICIEN, actionsPossibles)[0] : ChoixMagicien.VOL_JOUEUR;
   
     switch (actionChoisie) {
       case ChoixMagicien.ECHANGE_PIOCHE:
@@ -32,11 +36,13 @@ class Magicien extends aPersonnage {
         this.echangeAvecJoueur(joueur, joueurs);
         break;
     }
+
+    this.getEventBus().emit("FIN_EFFET_PERSONNAGE", {});
   }
 
   private echangeAvecPioche(joueur: iJoueur, piocheBatiment: Array<iBatiment>) {
     const nbChoixMax = Math.min(piocheBatiment.length, joueur.getBatimentsEnMain().length);
-    const batimentsChoisis = joueur.choix(joueur.getBatimentsEnMain(), nbChoixMax);
+    const batimentsChoisis = joueur.choix(TypeChoix.CIBLE_MAGICIEN, joueur.getBatimentsEnMain(), nbChoixMax);
   
     // Suppression des cartes de la main
     joueur.setBatimentsEnMain(joueur.getBatimentsEnMain().filter(batiment => !batimentsChoisis.includes(batiment)));
@@ -61,7 +67,7 @@ class Magicien extends aPersonnage {
     })
 
     // Choix du joueur attaqué
-    const choix = joueur.choix(joueursAttaquables)[0];
+    const choix = joueur.choix(TypeChoix.CIBLE_MAGICIEN, joueursAttaquables)[0];
     const joueurChoisi = joueurs.find(j => j.getId() === choix.id);
     if (!joueurChoisi) {
       throw new Error(ERREURS.ERREUR_CHOIX())

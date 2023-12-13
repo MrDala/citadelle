@@ -1,6 +1,6 @@
 enum ChoixPioche {
-  ARGENT,
-  CARTE
+  ARGENT = "ARGENT",
+  CARTE = "CARTE"
 }
 
 export default ChoixPioche;

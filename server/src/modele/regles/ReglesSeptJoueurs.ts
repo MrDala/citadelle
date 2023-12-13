@@ -1,4 +1,5 @@
 import ERREURS from "../enum/Erreurs";
+import TypeChoix from "../enum/TypeChoix";
 import iJoueur from "../joueurs/iJoueur";
 import PilePersonnage from "../personnages/PilePersonnage";
 import iPersonnage from "../personnages/iPersonnage";
@@ -33,7 +34,7 @@ class ReglesSeptJoueurs extends aRegles {
       const joueur = joueurs[currentIndex];
       cartes = personnages.getCartesChoisissables();
 
-      const personnageChoisi = joueur.choix(cartes)[0];
+      const personnageChoisi = joueur.choix(TypeChoix.PERSONNAGE, cartes)[0];
       personnages.choisirPersonnage(personnageChoisi, joueur);
     }
 
@@ -51,7 +52,7 @@ class ReglesSeptJoueurs extends aRegles {
     
     // Choix du personnage
     cartes = personnages.getCartesChoisissables();
-    const personnageChoisi = dernierJoueur.choix(cartes)[0]; // Choix du personnage
+    const personnageChoisi = dernierJoueur.choix(TypeChoix.PERSONNAGE, cartes)[0]; // Choix du personnage
     personnages.choisirPersonnage(personnageChoisi, dernierJoueur);
   }
 }

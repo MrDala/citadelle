@@ -4,6 +4,7 @@ import iBatiment from "../batiments/iBatiment";
 import PersonnagePossede from "./PersonnagePossede";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "./iPersonnage";
+import Personnages from "../enum/Personnages";
 
 class Architecte extends aPersonnage {
   public constructor() {
@@ -17,6 +18,8 @@ class Architecte extends aPersonnage {
     personnagesAttaquables: ReadonlyArray<iPersonnage>, 
     piocheBatiment: Array<iBatiment>
   ): void {
+    this.getEventBus().emit("DEBUT_EFFET_PERSONNAGE", {personnage: Personnages.ARCHITECTE})
+
     const nbCartesPiochees = 2;
 
     for (let i=0; i< nbCartesPiochees; i++) {
@@ -26,6 +29,8 @@ class Architecte extends aPersonnage {
         joueur.addBatimentsEnMain(batimentPioche!);
       }
     }
+
+    this.getEventBus().emit("FIN_EFFET_PERSONNAGE")
   }
 }
 

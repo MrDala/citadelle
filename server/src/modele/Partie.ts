@@ -12,6 +12,7 @@ import PilePersonnage from "./personnages/PilePersonnage";
 import ChoixPioche from "./enum/ChoixPioche";
 import PersonnagePossede from "./personnages/PersonnagePossede";
 import EventBus from "./evenements/EventBus";
+import TypeChoix from "./enum/TypeChoix";
 
 class Partie {
   private eventBus: EventBus;
@@ -115,7 +116,7 @@ class Partie {
 
     do {
       // Choix de l'action réalisée par le joueur
-      choix = joueur.choix(actionsDipos)[0];
+      choix = joueur.choix(TypeChoix.ACTION, actionsDipos)[0];
 
       switch (choix) {
         case ChoixAction.PIOCHE:
@@ -149,7 +150,7 @@ class Partie {
   }
 
   private actionArgentOuPioche(joueur: iJoueur): number | Array<iBatiment> {
-    const action = joueur.choix(Object.values(ChoixPioche))[0];
+    const action = joueur.choix(TypeChoix.PIOCHE, Object.values(ChoixPioche))[0];
 
     switch (action) {
       // Choix de recevoir de l'argent

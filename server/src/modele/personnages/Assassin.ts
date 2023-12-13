@@ -4,6 +4,8 @@ import aPersonnage from "./aPersonnage";
 import PersonnagePossede from "./PersonnagePossede";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "./iPersonnage";
+import TypeChoix from "../enum/TypeChoix";
+import Personnages from "../enum/Personnages";
 
 
 class Assassin extends aPersonnage {
@@ -18,8 +20,12 @@ class Assassin extends aPersonnage {
     personnagesAttaquables: ReadonlyArray<iPersonnage>, 
     piocheBatiment: Array<iBatiment>
   ): void {
-    let personnage = joueur.choix(personnagesAttaquables)[0];
+    this.getEventBus().emit("DEBUT_EFFET_PERSONNAGE", {personnage: Personnages.ASSASSIN})
+
+    let personnage = joueur.choix(TypeChoix.CIBLE_ASSASSIN, personnagesAttaquables)[0];
     personnage.setVivant(false);
+
+    this.getEventBus().emit("FIN_EFFET_PERSONNAGE", {})
   }
 }
 
