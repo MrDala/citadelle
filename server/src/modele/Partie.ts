@@ -7,12 +7,14 @@ import FabriqueRegles from "./regles/FabriqueRegles";
 import iJoueur from "./joueurs/iJoueur";
 import iPersonnage from "./personnages/iPersonnage";
 import iRegles from "./regles/iRegles";
-import iBatiment from "./batiments/iBatiments";
+import iBatiment from "./batiments/iBatiment";
 import PilePersonnage from "./personnages/PilePersonnage";
 import ChoixPioche from "./enum/ChoixPioche";
 import PersonnagePossede from "./personnages/PersonnagePossede";
+import EventBus from "./evenements/EventBus";
 
 class Partie {
+  private eventBus: EventBus;
   private regles: iRegles;
   private joueurs: Array<iJoueur>;
   private pioche: Array<iBatiment>;
@@ -27,6 +29,7 @@ class Partie {
       throw Error(ERREURS.ERREUR_TROP_JOUEURS());
     }
 
+    this.eventBus = EventBus.getInstance();
     this.joueurs = joueurs;
     this.regles = FabriqueRegles.getRegles(this.joueurs.length);
     this.pioche = new Array<iBatiment>(...FabriqueBatiments.init(json.batiments));
@@ -37,20 +40,19 @@ class Partie {
   }
 
   public jouer(): void {
-    console.log("DEBUT DE LA PARTIE");
+    this.eventBus.emit("DEBUT_PARTIE");
     this.initPartie();
     do {
       this.tourDeJeu();
     } while (!this.regles.isPartieTerminee(this.joueurs));
 
     let classement = this.getClassement();
-
-    console.log("Nombre de tour joués : " + this.nombreTour + "\n");
-    console.log(classement);
-    console.log("\nFIN DE LA PARTIE");
+    this.eventBus.emit("FIN_PARTIE", { nombreTour: this.nombreTour, classement: classement });
   }
 
   private initPartie(): void {
+    this.eventBus.emit("DEBUT_INITIALISATION");
+
     this.joueurs.forEach(joueur => {
       for (let i = 0; i < this.regles.getInit().batimentsMain; i++) {
         let carte = this.pioche.shift();
@@ -63,24 +65,35 @@ class Partie {
 
     var indexCouronne = Math.floor(Math.random() * this.joueurs.length);
     this.joueurs[indexCouronne].setCouronne(true);
+
+    this.eventBus.emit("FIN_INITIALISATION");
   }
 
   private tourDeJeu(): void {
+    this.eventBus.emit("DEBUT_TOUR", {nbTour : this.nombreTour});
+
     this.nombreTour++;
     this.phaseChoixDuRole();
     this.phaseAction();
     this.phaseFinDeTour();
+
+    this.eventBus.emit("FIN_TOUR");
   }
 
   /* Phase d'un tour de jeu */
   private phaseChoixDuRole(): void {
+    this.eventBus.emit("DEBUT_PHASE_DISTRIBUTION");
+
     this.personnages.getCartesChoisissables().sort(() => Math.random() - 0.5);
     const indexPremierJoueur = this.getIndexCouronne();
-
     this.regles.distribution(indexPremierJoueur, this.joueurs, this.personnages);
+
+    this.eventBus.emit("FIN_PHASE_DISTRIBUTION");
   }
 
   private phaseAction(): void {
+    this.eventBus.emit("DEBUT_PHASE_ACTION");
+
     const personnagesChoisis = this.personnages.getCartesChoisies();
     const personnagesTries = personnagesChoisis.sort((a, b) => a.getCarte().getOrdre() - b.getCarte().getOrdre());
 
@@ -90,6 +103,8 @@ class Partie {
         this.actionParPersonnage(carteChoisie);
       }
     });
+
+    this.eventBus.emit("FIN_PHASE_ACTION");
   }
 
   private actionParPersonnage(carteChoisie: PersonnagePossede): void {

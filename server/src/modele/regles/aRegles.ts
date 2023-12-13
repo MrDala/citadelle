@@ -1,7 +1,7 @@
 import Clan from "../enum/Clan";
 import ERREURS from "../enum/Erreurs";
 import Roi from "../personnages/Roi";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 import iJoueur from "../joueurs/iJoueur";
 import iPersonnage from "../personnages/iPersonnage";
 import iRegles, { CartesEcartees, DebutTour, Init } from "./iRegles";

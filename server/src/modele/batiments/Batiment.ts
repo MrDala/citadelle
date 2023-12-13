@@ -1,7 +1,7 @@
 import Clan from "../enum/Clan";
 import ERREURS from "../enum/Erreurs";
 import { Effets, Effet } from "./Effets";
-import iBatiment from "./iBatiments";
+import iBatiment from "./iBatiment";
 
 export type typeBatiment = {
   nom: string, 

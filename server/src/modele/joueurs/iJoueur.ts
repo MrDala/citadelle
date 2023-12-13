@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
 import iPersonnage from "../personnages/iPersonnage";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 
 interface iJoueur {
   // Getter

@@ -1,5 +1,5 @@
 import Batiment from "../batiments/Batiment";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 import ERREURS from "../enum/Erreurs";
 import aJoueur from "./aJoueur";
 

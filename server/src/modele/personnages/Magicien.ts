@@ -3,7 +3,7 @@ import iJoueur from "../joueurs/iJoueur";
 import aPersonnage from "./aPersonnage";
 import ERREURS from "../enum/Erreurs";
 import ChoixMagicien from "../enum/ChoixMagicien";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 import iPersonnage from "./iPersonnage";
 import PersonnagePossede from "./PersonnagePossede";
 import { UUID } from "crypto";

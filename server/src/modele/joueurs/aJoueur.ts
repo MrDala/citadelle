@@ -1,7 +1,7 @@
 import { UUID, randomUUID } from "crypto";
 import iPersonnage from "../personnages/iPersonnage";
 import iJoueur from "./iJoueur";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 
 abstract class aJoueur implements iJoueur {
   private readonly id: UUID;

@@ -1,7 +1,7 @@
 import Clan from "../enum/Clan";
 import Batiment, { typeBatiment } from "./Batiment";
 import { Effets } from "./Effets";
-import iBatiment from "./iBatiments";
+import iBatiment from "./iBatiment";
 
 export interface BatimentJson {
   nom: string;

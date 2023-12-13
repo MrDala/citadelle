@@ -1,5 +1,5 @@
 import Clan from "../enum/Clan";
-import iBatiment from "../batiments/iBatiments";
+import iBatiment from "../batiments/iBatiment";
 import aPersonnage from "./aPersonnage";
 import PersonnagePossede from "./PersonnagePossede";
 import iJoueur from "../joueurs/iJoueur";
